@@ -1,0 +1,17 @@
+{
+  "id": "cardboardbox",
+  "name": "Cardboard Box",
+  "description": "Cardboard Box is a modding library for creating GUIs.",
+  "version": "0.1.0",
+  "side": "universal",
+  "initializers": [
+    "redstoneparadox.cardboardbox.CardboardBox"
+  ],
+  "requires": {
+    "fabric": "*"
+  },
+  "mixins": {
+    "client": "cardboardbox.client.json",
+    "common": "cardboardbox.common.json"
+  }
+}

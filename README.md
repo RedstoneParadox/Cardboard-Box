@@ -1,0 +1,1 @@
+The official repository of Cardboard Box, a GUI library for Minecraft modding.
