@@ -6,4 +6,5 @@ package redstoneparadox.cardboardbox.client.hooks;
 public interface IGui {
 
     void setup();
+
 }

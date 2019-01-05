@@ -26,6 +26,11 @@ open class GuiNode(var name : String, var x : Float, var y : Float) {
         setupChildrenClient(gui)
     }
 
+    /**
+     * Function for client-sided setup of all GuiNodes in a GuiTree,
+     *
+     * @param gui the Gui this node's tree is attached to.
+     */
     open fun setupSelfClient(gui: Gui) {
 
     }
@@ -46,6 +51,12 @@ open class GuiNode(var name : String, var x : Float, var y : Float) {
         setupChildren(cardboardContainer)
     }
 
+
+    /**
+     * Function for setup of all GuiNodes in a GuiTree,
+     *
+     * @param cardboardContainer the container this node's tree is attached to.
+     */
     open fun setupSelf(cardboardContainer: CardboardContainer) {
 
     }
@@ -62,14 +73,30 @@ open class GuiNode(var name : String, var x : Float, var y : Float) {
     }
 
     fun draw(gui: Gui, float: Float, int1: Int, int2: Int, fontRenderer: FontRenderer) {
-        drawSelf(gui, float, int1, int2, fontRenderer)
+        drawSelf(gui, float, int1, int2)
         drawChildren(gui, float, int1, int2, fontRenderer)
     }
 
-    open fun drawSelf(gui: Gui, float: Float, int1: Int, int2: Int, fontRenderer: FontRenderer) {
+    /**
+     * Function for drawing the GuiNodes on screen.
+     *
+     * @param gui the gui to draw to.
+     * @param float Unknown Minecraft parameter.
+     * @param int1 Unknown Minecraft parameter.
+     * @param int2 Unknown.
+     * @param fontRenderer The font renderer.
+     */
+    open fun drawSelf(gui: Gui, float: Float, int1: Int, int2: Int) {
 
     }
 
+    /**
+     * Function that creates a copy of this node and moves it to fit in a grid.
+     *
+     * @param xShift the number of pixels to shift this in the X direction.
+     * @param yShift the number of pixels to shift this in the Y direction.
+     * @param iteration the number of this node. Iteration 0 is the original copy of the node.
+     */
     open fun createGridCopy(xShift: Float, yShift: Float, iteration: Int): GuiNode {
         return GuiNode(name + "_" + iteration.toString(), x + xShift, y + yShift)
     }
@@ -94,5 +121,23 @@ open class GuiNode(var name : String, var x : Float, var y : Float) {
         }
 
         return null
+    }
+
+    /**
+     * Adds a child to this node, provided it doesn't already have a child of the same name.
+     *
+     * @param guiNode the node to add as a child.
+     */
+    fun addChild(guiNode: GuiNode) {
+
+        for (child in children) {
+
+            if (child.name == guiNode.name) {
+                println("A node called ${guiNode.name} already exists!")
+                return
+            }
+        }
+
+        children.add(guiNode)
     }
 }

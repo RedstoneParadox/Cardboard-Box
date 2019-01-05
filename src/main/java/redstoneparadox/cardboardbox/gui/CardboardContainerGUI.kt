@@ -15,6 +15,10 @@ class CardboardContainerGUI(cardboardContainer: CardboardContainer) : ContainerG
     var int2: Int = 0
     private var guiTree : GuiTree = cardboardContainer.guiTree
 
+    fun forceUpdate() {
+        draw(int1, int2, float)
+    }
+
     override fun setup() {
         guiTree.setupClient(this)
     }
@@ -26,6 +30,26 @@ class CardboardContainerGUI(cardboardContainer: CardboardContainer) : ContainerG
         this.int2 = p2
 
         guiTree.drawChildren(this, p0, p1, p2, fontRenderer)
+
+    }
+
+    /**
+     * Used for drawing strings. What int_1 is used for is currently unknown.
+     *
+     * @param text the string to draw.
+     * @param xPos the x position of the string.
+     * @param yPos the y position of the string.
+     * @param int_1 Unknown.
+     */
+    fun drawString(text : String, xPos : Float, yPos : Float, int_1 : Int, withShadow: Boolean) {
+
+        if (withShadow) {
+            fontRenderer.drawWithShadow(text, xPos, yPos, int_1)
+
+        }
+        else {
+            fontRenderer.draw(text, xPos, yPos, int_1)
+        }
 
     }
 

@@ -11,4 +11,8 @@ class CardboardBox : ModInitializer {
         println("Hello Fabric world!")
     }
 
+    companion object {
+        val MOD_ID = "cardboard_box"
+    }
+
 }

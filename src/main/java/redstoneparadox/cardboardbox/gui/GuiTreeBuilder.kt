@@ -4,6 +4,7 @@ import net.minecraft.util.Identifier
 import redstoneparadox.cardboardbox.container.InventoryType
 import redstoneparadox.cardboardbox.gui.nodes.GuiNode
 import redstoneparadox.cardboardbox.gui.nodes.SlotNode
+import redstoneparadox.cardboardbox.misc.GuiTreeManager
 
 /**
  * Created by RedstoneParadox on 1/2/2019.
@@ -113,6 +114,7 @@ class GuiTreeBuilder(val identifier: Identifier) {
      * Builds the tree.
      */
     fun build() : GuiTree {
+        GuiTreeManager.addTree(tree)
         return tree
     }
 }

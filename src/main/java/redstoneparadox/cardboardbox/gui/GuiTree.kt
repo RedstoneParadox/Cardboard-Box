@@ -1,5 +1,7 @@
 package redstoneparadox.cardboardbox.gui
 
+import net.fabricmc.api.EnvType
+import net.fabricmc.api.Environment
 import net.minecraft.client.font.FontRenderer
 import net.minecraft.client.gui.Gui
 import net.minecraft.util.Identifier
@@ -13,6 +15,9 @@ class GuiTree(val identifier: Identifier) {
 
     var children : ArrayList<GuiNode> = ArrayList()
 
+    @Environment(EnvType.CLIENT)
+    lateinit var gui : Gui
+
     fun setup(cardboardContainer: CardboardContainer) {
 
         if (children.isEmpty()) {
@@ -25,6 +30,8 @@ class GuiTree(val identifier: Identifier) {
     }
 
     fun setupClient(gui: Gui) {
+
+        this.gui = gui
 
         if (children.isEmpty()) {
             return

@@ -11,7 +11,7 @@ import redstoneparadox.cardboardbox.client.hooks.IContainerGui;
  * Created by RedstoneParadox on 12/31/2018.
  */
 @Mixin(ContainerGui.class)
-public class ContainerGuiMixin extends Gui implements IContainerGui {
+public abstract class ContainerGuiMixin extends Gui implements IContainerGui {
 
     @Shadow
     private void drawSlot(Slot slot_1) {

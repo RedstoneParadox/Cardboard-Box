@@ -4,14 +4,15 @@ import net.minecraft.container.Container
 import net.minecraft.container.Slot
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.inventory.Inventory
+import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
-import redstoneparadox.cardboardbox.misc.GuiController
 import redstoneparadox.cardboardbox.gui.GuiTree
+import redstoneparadox.cardboardbox.registry.GuiTreeSupplierRegistry
 
 /**
  * Created by RedstoneParadox on 12/30/2018.
  */
-class CardboardContainer(var pos: BlockPos, val player : PlayerEntity) : Container() {
+class CardboardContainer(var pos: BlockPos, val player : PlayerEntity, val id : Identifier) : Container() {
 
     var playerSlotList : ArrayList<Slot> = ArrayList()
     var hotbarSlotList : ArrayList<Slot> = ArrayList()
@@ -21,15 +22,13 @@ class CardboardContainer(var pos: BlockPos, val player : PlayerEntity) : Contain
 
     init {
         println("Opened container, $pos")
-
-        var blockEntityController : GuiController = player.world.getBlockEntity(pos) as GuiController
-        guiTree = blockEntityController.guiTree
+        guiTree = GuiTreeSupplierRegistry.supplyTree(id)!!
         inventoryToSlots()
         guiTree.setup(this)
     }
 
     fun inventoryToSlots() {
-        var inventory : Inventory = player.world.getBlockEntity(pos) as Inventory
+        var inventory : Inventory = player.world.getBlockEntity(pos)!! as? Inventory ?: return
 
         for (i in 0..8) {
             addHotbarSlot(Slot(player.inventory, i, (20 * (i + 1)), 120))
