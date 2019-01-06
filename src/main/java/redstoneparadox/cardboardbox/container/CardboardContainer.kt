@@ -25,6 +25,9 @@ class CardboardContainer(var pos: BlockPos, val player : PlayerEntity, val id : 
         guiTree = GuiTreeSupplierRegistry.supplyTree(id)!!
         inventoryToSlots()
         guiTree.setup(this)
+        guiTree.player = this.player
+
+        println(guiTree.player)
     }
 
     fun inventoryToSlots() {

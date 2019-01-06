@@ -8,7 +8,7 @@ import net.fabricmc.api.ModInitializer
 class CardboardBox : ModInitializer {
 
     override fun onInitialize() {
-        println("Hello Fabric world!")
+
     }
 
     companion object {

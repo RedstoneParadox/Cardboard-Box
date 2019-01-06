@@ -6,8 +6,8 @@
   "side": "universal",
   "initializers": [
     "redstoneparadox.cardboardbox.CardboardBox",
-    "redstoneparadox.cardboardbox.reference.ReferenceOneMain",
-    "redstoneparadox.cardboardbox.reference.ReferenceOneClient"
+    "redstoneparadox.cardboardbox.reference.one.ReferenceOne",
+    "redstoneparadox.cardboardbox.reference.one.ReferenceOneClient"
   ],
   "requires": {
     "fabric": "*"

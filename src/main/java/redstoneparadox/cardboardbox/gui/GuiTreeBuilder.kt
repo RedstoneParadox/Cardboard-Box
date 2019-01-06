@@ -18,7 +18,11 @@ import redstoneparadox.cardboardbox.misc.GuiTreeManager
  */
 class GuiTreeBuilder(val identifier: Identifier) {
 
-    private val tree : GuiTree = GuiTree(identifier)
+    private val tree : GuiTree
+
+    init {
+        tree = GuiTree(identifier)
+    }
 
     /**
      * Adds a node to the root of the tree.
