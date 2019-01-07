@@ -14,7 +14,7 @@ class GuiTree(val identifier: Identifier) {
 
     var children : ArrayList<GuiNode> = ArrayList()
     lateinit var gui : Gui
-    lateinit var player : PlayerEntity
+    var player : PlayerEntity? = null
 
     fun setup(cardboardContainer: CardboardContainer) {
 

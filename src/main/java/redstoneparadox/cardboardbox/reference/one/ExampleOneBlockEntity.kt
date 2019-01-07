@@ -27,7 +27,7 @@ class ExampleOneBlockEntity : BlockEntity(ReferenceOne.EXAMPLE_ONE_BE), GuiTreeC
          * is, it sets the LabelNode's text to display the player's position.
          */
         if (guiTree.identifier == ReferenceOne.EXAMPLE_ONE_ID) {
-            (guiTree.getChild("position_label") as LabelNode).text = "Position: " + guiTree.player.pos.toString()
+            (guiTree.getChild("position_label") as LabelNode).text = "Position: " + guiTree.player!!.pos.toString()
         }
     }
 
