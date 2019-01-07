@@ -99,9 +99,8 @@ class GuiTreeBuilder(val identifier: Identifier, val playerEntity: PlayerEntity)
     }
 
     /**
-     * Sets up the player inventory (3 rows + hotbar) in the GuiTree the same way it appears in vanilla chests,
-     * furnaces, etc. Do note that the same thing can be accomplished with the the <code>addNodeGrid()</code> and this
-     * exists for the sake of reducing boilerplate code.
+     * Sets SlotNodes to draw the player inventory (3 rows + hotbar) in the GuiTree the same way it appears in vanilla
+     * chests, furnaces, etc.
      *
      * @param xPos the x position of the player inventory.
      * @param yPos the y position of the player inventory.
@@ -110,11 +109,15 @@ class GuiTreeBuilder(val identifier: Identifier, val playerEntity: PlayerEntity)
      * vanilla containers but the exact value may depend on the size of the container.
      */
     fun addPlayerInventory(xPos : Float, yPos : Float): GuiTreeBuilder {
-        addNodeGrid(SlotNode("player_slot", xPos, yPos, InventoryType.PLAYER, 0), 3, 9, 20f, 20f)
-        addNodeGrid(SlotNode("hotbar_slot", xPos, yPos + 65f, InventoryType.HOTBAR, 0), 1, 9, 20f, 20f)
+        addNodeGrid(SlotNode("player_slot", xPos, yPos, InventoryType.PLAYER, 0), 3, 9, 18f, 18f)
+        addNodeGrid(SlotNode("hotbar_slot", xPos, yPos + 58f, InventoryType.HOTBAR, 0), 1, 9, 18f, 18f)
 
         return this
     }
+
+    /**
+     *
+     */
 
     /**
      * Builds the tree.

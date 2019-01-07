@@ -19,9 +19,7 @@ class RGBAColor(red: Short, green: Short, blue: Short, alpha: Short) {
     /**
      * An alternate constructor with no transparency.
      */
-    constructor(red: Short, green: Short, blue: Short) : this(red, green, blue, 255) {
-
-    }
+    constructor(red: Short, green: Short, blue: Short) : this(red, green, blue, 255)
 
     private var red : Byte
     private var blue : Byte
@@ -101,8 +99,12 @@ class RGBAColor(red: Short, green: Short, blue: Short, alpha: Short) {
         return ((byte + 128)/255).toFloat()
     }
 
+    override fun toString(): String {
+        return "RGBAColor: {Red ${getRedChannel()}, Green ${getGreenChannel()}, Blue ${getBlueChannel()}, Alpha ${getAlphaChannel()}}"
+    }
+
     /**
-     * Helper class for generating some common colors.
+     * Helper enum for generating some common colors.
      */
     enum class Presets(private val red: Short, private val green: Short, private val blue: Short) {
         WHITE(255, 255, 255),
@@ -111,11 +113,11 @@ class RGBAColor(red: Short, green: Short, blue: Short, alpha: Short) {
         GREEN(0, 255, 0),
         BLUE(0,0,255);
 
-        fun presetToColor() : RGBAColor {
+        fun pick() : RGBAColor {
             return RGBAColor(red, green, blue)
         }
 
-        fun presetToColor(alpha: Short) : RGBAColor {
+        fun pick(alpha: Short) : RGBAColor {
             return RGBAColor(red, green, blue, alpha)
         }
     }

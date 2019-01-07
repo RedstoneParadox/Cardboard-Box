@@ -5,7 +5,6 @@ import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.fabricmc.fabric.networking.CustomPayloadPacketRegistry
 import net.minecraft.client.network.ClientPlayerEntity
-import net.minecraft.container.Slot
 import net.minecraft.server.network.packet.CustomPayloadServerPacket
 import net.minecraft.util.PacketByteBuf
 import redstoneparadox.cardboardbox.CardboardBox
@@ -47,13 +46,12 @@ object NetworkUtil {
         for (listener in listeners) {
             if (listener.syncId == syncId) {
 
-                if (!listener.containerSlotList.isEmpty()) {
-                    val slot: Slot = listener.containerSlotList[index]
+                if (listener.hasSlots()) {
 
-                    slot.xPosition = posX
-                    slot.yPosition = posY
+                    listener.syncSlotPosition(posX, posY, index)
                 }
             }
         }
     }
+
 }

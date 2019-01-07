@@ -14,6 +14,12 @@ import redstoneparadox.cardboardbox.client.hooks.IContainerGui;
 public abstract class ContainerGuiMixin extends Gui implements IContainerGui {
 
     @Shadow
+    protected int containerWidth;
+
+    @Shadow
+    protected int containerHeight;
+
+    @Shadow
     private void drawSlot(Slot slot_1) {
 
     }
@@ -21,6 +27,16 @@ public abstract class ContainerGuiMixin extends Gui implements IContainerGui {
     @Override
     public void drawContainerSlot(Slot slot) {
         drawSlot(slot);
+    }
+
+    @Override
+    public int getWidth() {
+        return containerWidth;
+    }
+
+    @Override
+    public int getHeight() {
+        return containerHeight;
     }
 
 }

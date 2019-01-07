@@ -12,20 +12,29 @@ import net.minecraft.block.entity.BlockEntity
 import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.container.Container
 import net.minecraft.entity.player.PlayerEntity
+import net.minecraft.inventory.Inventory
+import net.minecraft.item.ItemStack
+import net.minecraft.text.TextComponent
+import net.minecraft.util.DefaultedList
 import net.minecraft.util.Hand
 import net.minecraft.util.Identifier
+import net.minecraft.util.InventoryUtil
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import net.minecraft.util.registry.Registry
+import net.minecraft.util.registry.Registry.register
 import net.minecraft.world.BlockView
 import net.minecraft.world.World
 import redstoneparadox.cardboardbox.CardboardBox
 import redstoneparadox.cardboardbox.container.CardboardContainer
+import redstoneparadox.cardboardbox.container.InventoryType
 import redstoneparadox.cardboardbox.gui.ContainerTreeGUI
 import redstoneparadox.cardboardbox.gui.GuiTree
 import redstoneparadox.cardboardbox.gui.GuiTreeBuilder
+import redstoneparadox.cardboardbox.gui.nodes.ColoredRectNode
 import redstoneparadox.cardboardbox.gui.nodes.LabelNode
-import redstoneparadox.cardboardbox.gui.nodes.RectangleNode
+import redstoneparadox.cardboardbox.gui.nodes.SlotNode
+import redstoneparadox.cardboardbox.gui.nodes.TextureRectNode
 import redstoneparadox.cardboardbox.misc.GuiTreeController
 import redstoneparadox.cardboardbox.misc.GuiTreeManager
 import redstoneparadox.cardboardbox.misc.RGBAColor
@@ -49,7 +58,7 @@ class ReferenceOneMain : ModInitializer {
     }
 
     override fun onInitialize() {
-        EXAMPLE_ONE_BLOCK = Registry.register<Block>(Registry.BLOCK, EXAMPLE_ONE_ID, ReferenceOneBlock())
+        EXAMPLE_ONE_BLOCK = register<Block>(Registry.BLOCK, EXAMPLE_ONE_ID, ReferenceOneBlock())
         EXAMPLE_ONE_BE = registerBlockEntity(EXAMPLE_ONE_ID, BlockEntityType.Builder.create { ExampleOneBlockEntity() })
 
         /**
@@ -65,7 +74,7 @@ class ReferenceOneMain : ModInitializer {
 
     fun <T : BlockEntity> registerBlockEntity(identifier: Identifier, builder : BlockEntityType.Builder<T>) : BlockEntityType<T> {
         val blockEntityType = builder.method_11034(null)
-        Registry.register(Registry.BLOCK_ENTITY, identifier, blockEntityType)
+        register(Registry.BLOCK_ENTITY, identifier, blockEntityType)
         return blockEntityType
     }
 
@@ -82,10 +91,12 @@ class ReferenceOneClient : ClientModInitializer {
          */
         GuiTreeSupplierRegistry.registerSupplier(EXAMPLE_ONE_ID) { id: Identifier, player: PlayerEntity ->
             GuiTreeBuilder(id, player)
-                    .addNode(RectangleNode("color", 10f, 10f, 100f, 60f, RGBAColor.Presets.WHITE.presetToColor()))
+                    .addNode(ColoredRectNode("color", 10f, 10f, 100f, 60f, RGBAColor.Presets.WHITE.pick()))
                     .addNode(LabelNode("header_label", 20f, 20f, "Position:"))
                     .addNode(LabelNode("position_label", 20f, 40f, ""))
-                    .addPlayerInventory(0f, 83f)
+                    .addNode(TextureRectNode("backgrounds", 0f, 0f, 256, 256, Identifier("textures/gui/container/shulker_box.png")))
+                    .addPlayerInventory(8f,84f)
+                    .addNodeGrid(SlotNode("container", 8f, 18f, InventoryType.CONTAINER, 0), 3, 9, 18f, 18f)
                     .build()
         }
 
@@ -97,7 +108,9 @@ class ReferenceOneClient : ClientModInitializer {
 /**
  * A reference implementation of GuiTreeController on a BlockEntity.
  */
-class ExampleOneBlockEntity : BlockEntity(ReferenceOneMain.EXAMPLE_ONE_BE), GuiTreeController {
+class ExampleOneBlockEntity : BlockEntity(ReferenceOneMain.EXAMPLE_ONE_BE), GuiTreeController, Inventory {
+
+    val inventory = DefaultedList.create(invSize, ItemStack.EMPTY)
 
     init {
         GuiTreeManager.addController(this)
@@ -115,7 +128,7 @@ class ExampleOneBlockEntity : BlockEntity(ReferenceOneMain.EXAMPLE_ONE_BE), GuiT
          * is, it sets the LabelNode's text to display the player's position.
          */
         if (guiTree.identifier == ReferenceOneMain.EXAMPLE_ONE_ID) {
-            (guiTree.getChild("position_label") as LabelNode).text = "Position: " + guiTree.player!!.pos.toString()
+            (guiTree.getChild("position_label") as LabelNode).text = guiTree.player.pos.toString()
         }
     }
 
@@ -124,6 +137,86 @@ class ExampleOneBlockEntity : BlockEntity(ReferenceOneMain.EXAMPLE_ONE_BE), GuiT
      */
     override fun removeTree(guiTree: GuiTree) {
 
+    }
+
+    //Inventory functions
+    override fun getInvSize(): Int {
+        return 27
+    }
+
+    override fun isInvEmpty(): Boolean {
+        return inventory.stream().anyMatch(ItemStack::isEmpty)
+    }
+
+    override fun getInvStack(slot: Int): ItemStack {
+        return inventory[slot]
+    }
+
+    override fun takeInvStack(slot: Int, amount: Int): ItemStack {
+        return InventoryUtil.splitStack(this.inventory, slot, amount)
+    }
+
+    override fun removeInvStack(slot: Int): ItemStack {
+        return InventoryUtil.removeStack(this.inventory, slot)
+    }
+
+    override fun setInvStack(slot: Int, stack: ItemStack) {
+        this.inventory[slot] = stack
+        if (stack.amount > this.invMaxStackAmount) {
+            stack.amount = this.invMaxStackAmount
+        }
+    }
+
+    override fun getInvMaxStackAmount(): Int {
+        return 64
+    }
+
+    override fun canPlayerUseInv(player: PlayerEntity): Boolean {
+        return true
+    }
+
+    override fun onInvOpen(player : PlayerEntity) {
+
+    }
+
+    override fun onInvClose(player : PlayerEntity) {
+
+    }
+
+    override fun isValidInvStack(slot : Int, stack : ItemStack): Boolean {
+        return true
+    }
+
+    override fun getInvProperty(i: Int): Int {
+        return 0
+    }
+
+    override fun setInvProperty(i: Int, i1: Int) {
+
+    }
+
+    override fun getInvPropertyCount(): Int {
+        return 0
+    }
+
+    override fun getInvHeight(): Int {
+        return 2
+    }
+
+    override fun getInvWidth(): Int {
+        return 2
+    }
+
+    override fun clearInv() {
+        inventory.clear()
+    }
+
+    override fun getName(): TextComponent? {
+        return null
+    }
+
+    override fun hasCustomName(): Boolean {
+        return false
     }
 }
 

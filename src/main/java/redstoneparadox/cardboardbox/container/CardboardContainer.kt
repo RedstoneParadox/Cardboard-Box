@@ -19,7 +19,6 @@ class CardboardContainer(var pos: BlockPos, val player : PlayerEntity, val id : 
 
     init {
         inventoryToSlots()
-
         if (!player.world.isClient()) {
             NetworkUtil.listenForUpdate(this)
         }
@@ -71,5 +70,16 @@ class CardboardContainer(var pos: BlockPos, val player : PlayerEntity, val id : 
 
     override fun canUse(player: PlayerEntity): Boolean {
         return true
+    }
+
+    fun hasSlots(): Boolean {
+        return slotList.isNotEmpty()
+    }
+
+    fun syncSlotPosition(x : Int, y : Int, index : Int) {
+        val slot = slotList[index]
+
+        slot.xPosition = x
+        slot.yPosition = y
     }
 }

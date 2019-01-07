@@ -9,4 +9,8 @@ public interface IContainerGui {
 
     void drawContainerSlot(Slot slot);
 
+    int getWidth();
+
+    int getHeight();
+
 }

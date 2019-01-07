@@ -16,7 +16,7 @@ import redstoneparadox.cardboardbox.misc.RGBAColor
  * @param primaryColor the primary color of the node.
  * @param secondaryColor the secondary color of the node.
  */
-class RectangleNode(name: String, x: Float, y: Float, var width : Float, var height : Float, var primaryColor : RGBAColor, var secondaryColor : RGBAColor) : GuiNode(name, x, y) {
+class ColoredRectNode(name: String, x: Float, y: Float, var width : Float, var height : Float, var primaryColor : RGBAColor, var secondaryColor : RGBAColor) : GuiNode(name, x, y) {
 
     /**
      * An alternative constructor with only one color so it does not draw a gradient.

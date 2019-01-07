@@ -88,14 +88,17 @@ class ContainerTreeGUI(cardboardContainer: CardboardContainer, id : Identifier) 
 
         bufferBuilder.begin(7, VertexFormats.POSITION)
         bufferBuilder.vertex(xPos.toDouble(), yPos.toDouble(), 0.0).next()
-        bufferBuilder.vertex((xPos + width).toDouble(), yPos.toDouble(), 0.0).next()
-        bufferBuilder.vertex((xPos + width).toDouble(), (yPos + height).toDouble(), 0.0).next()
         bufferBuilder.vertex(xPos.toDouble(), (yPos + height).toDouble(), 0.0).next()
+        bufferBuilder.vertex((xPos + width).toDouble(), (yPos + height).toDouble(), 0.0).next()
+        bufferBuilder.vertex((xPos + width).toDouble(), yPos.toDouble(), 0.0).next()
         tessellator.draw()
 
         GlStateManager.enableTexture()
         GlStateManager.disableBlend()
     }
+
+    //2nd: bufferBuilder.vertex((xPos + width).toDouble(), yPos.toDouble(), 0.0).next()
+    //4th: bufferBuilder.vertex(xPos.toDouble(), (yPos + height).toDouble(), 0.0).next()
 
     fun getChild(name : String) : GuiNode? {
         return guiTree.getChild(name)
