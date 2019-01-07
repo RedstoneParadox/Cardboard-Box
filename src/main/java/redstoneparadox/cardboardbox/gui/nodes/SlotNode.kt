@@ -1,8 +1,12 @@
 package redstoneparadox.cardboardbox.gui.nodes
 
+import net.minecraft.client.gui.Gui
+import net.minecraft.client.network.ClientPlayerEntity
 import net.minecraft.container.Slot
 import redstoneparadox.cardboardbox.container.CardboardContainer
 import redstoneparadox.cardboardbox.container.InventoryType
+import redstoneparadox.cardboardbox.gui.ContainerTreeGUI
+import redstoneparadox.cardboardbox.networking.NetworkUtil
 import kotlin.math.roundToInt
 
 /**
@@ -16,15 +20,19 @@ import kotlin.math.roundToInt
  */
 class SlotNode(name: String, x: Float, y: Float, val type: InventoryType, val index: Int) : GuiNode(name, x, y) {
 
-    override fun setupSelf(cardboardContainer: CardboardContainer) {
+    override fun setupSelf(gui : Gui) {
         val slot : Slot = when (type) {
-            InventoryType.CONTAINER -> cardboardContainer.getSlot(index + 36)
-            InventoryType.PLAYER -> cardboardContainer.getSlot(index + 9)
-            InventoryType.HOTBAR -> cardboardContainer.getSlot(index)
+            InventoryType.CONTAINER -> (gui as ContainerTreeGUI).container.getSlot(index + 36)
+            InventoryType.PLAYER -> (gui as ContainerTreeGUI).container.getSlot(index + 9)
+            InventoryType.HOTBAR -> (gui as ContainerTreeGUI).container.getSlot(index)
         }
 
         slot.xPosition = x.roundToInt()
         slot.yPosition = y.roundToInt()
+
+        if ((gui.container as CardboardContainer).player is ClientPlayerEntity) {
+            NetworkUtil.syncSlot(x.toInt(), y.toInt(), index, gui.container.syncId, ((gui.container as CardboardContainer).player) as ClientPlayerEntity)
+        }
     }
 
     override fun createGridCopy(xShift: Float, yShift: Float, iteration: Int) : GuiNode {

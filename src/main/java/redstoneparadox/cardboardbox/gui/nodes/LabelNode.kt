@@ -1,7 +1,7 @@
 package redstoneparadox.cardboardbox.gui.nodes
 
 import net.minecraft.client.gui.Gui
-import redstoneparadox.cardboardbox.gui.CardboardContainerGUI
+import redstoneparadox.cardboardbox.gui.ContainerTreeGUI
 
 /**
  * Created by RedstoneParadox on 12/30/2018.
@@ -15,7 +15,7 @@ import redstoneparadox.cardboardbox.gui.CardboardContainerGUI
 class LabelNode(name: String, x: Float, y: Float, var text: String) : GuiNode(name, x, y) {
 
     override fun drawSelf(gui: Gui, float: Float, int1: Int, int2: Int) {
-        (gui as CardboardContainerGUI).drawString(text, x, y, 0, false)
+        (gui as ContainerTreeGUI).drawString(text, x, y, 0, false)
     }
 
     override fun createGridCopy(xShift: Float, yShift: Float, iteration: Int) : GuiNode {

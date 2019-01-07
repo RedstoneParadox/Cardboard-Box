@@ -6,8 +6,7 @@ import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.inventory.Inventory
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
-import redstoneparadox.cardboardbox.gui.GuiTree
-import redstoneparadox.cardboardbox.registry.GuiTreeSupplierRegistry
+import redstoneparadox.cardboardbox.networking.NetworkUtil
 
 /**
  * Created by RedstoneParadox on 12/30/2018.
@@ -18,20 +17,19 @@ class CardboardContainer(var pos: BlockPos, val player : PlayerEntity, val id : 
     var hotbarSlotList : ArrayList<Slot> = ArrayList()
     var containerSlotList : ArrayList<Slot> = ArrayList()
 
-    var guiTree : GuiTree
-
     init {
-        println("Opened container, $pos")
-        guiTree = GuiTreeSupplierRegistry.supplyTree(id)!!
         inventoryToSlots()
-        guiTree.setup(this)
-        guiTree.player = this.player
 
-        println(guiTree.player)
+        if (!player.world.isClient()) {
+            NetworkUtil.listenForUpdate(this)
+        }
     }
 
-    fun inventoryToSlots() {
-        var inventory : Inventory = player.world.getBlockEntity(pos)!! as? Inventory ?: return
+    private fun inventoryToSlots() {
+        var inventory : Inventory? = null
+        if (player.world.getBlockEntity(pos) is Inventory) {
+            inventory = player.world.getBlockEntity(pos) as Inventory
+        }
 
         for (i in 0..8) {
             addHotbarSlot(Slot(player.inventory, i, (20 * (i + 1)), 120))
@@ -49,22 +47,24 @@ class CardboardContainer(var pos: BlockPos, val player : PlayerEntity, val id : 
             addPlayerSlot(Slot(player.inventory, i, (20 * (i - 26)), 100))
         }
 
-        for (i in 0..(inventory.invSize - 1)) {
-            addContainerSlot(Slot(inventory, i, (20*i), 20))
+        if (inventory != null) {
+            for (i in 0..(inventory.invSize - 1)) {
+                addContainerSlot(Slot(inventory, i, (20 * i), 20))
+            }
         }
     }
 
-    fun addPlayerSlot(slot: Slot) {
+    private fun addPlayerSlot(slot: Slot) {
         playerSlotList.add(slot)
         addSlot(slot)
     }
 
-    fun addHotbarSlot(slot: Slot) {
+    private fun addHotbarSlot(slot: Slot) {
         hotbarSlotList.add(slot)
         addSlot(slot)
     }
 
-    fun addContainerSlot(slot : Slot) {
+    private fun addContainerSlot(slot : Slot) {
         containerSlotList.add(slot)
         addSlot(slot)
     }

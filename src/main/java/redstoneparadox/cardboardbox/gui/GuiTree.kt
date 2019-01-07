@@ -4,32 +4,17 @@ import net.minecraft.client.font.FontRenderer
 import net.minecraft.client.gui.Gui
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.util.Identifier
-import redstoneparadox.cardboardbox.container.CardboardContainer
 import redstoneparadox.cardboardbox.gui.nodes.GuiNode
 
 /**
  * Created by RedstoneParadox on 12/30/2018.
  */
-class GuiTree(val identifier: Identifier) {
+class GuiTree(val identifier: Identifier, val player : PlayerEntity) {
 
     var children : ArrayList<GuiNode> = ArrayList()
     lateinit var gui : Gui
-    var player : PlayerEntity? = null
 
-    fun setup(cardboardContainer: CardboardContainer) {
-
-        player = cardboardContainer.player
-
-        if (children.isEmpty()) {
-            return
-        }
-
-        for (child in children) {
-            child.setup(cardboardContainer)
-        }
-    }
-
-    fun setupClient(gui: Gui) {
+    fun setup(gui: Gui) {
 
         this.gui = gui
 
@@ -38,7 +23,7 @@ class GuiTree(val identifier: Identifier) {
         }
 
         for (child in children) {
-            child.setupClient(gui)
+            child.setup(gui)
         }
     }
 

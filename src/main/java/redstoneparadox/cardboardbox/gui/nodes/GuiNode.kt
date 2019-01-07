@@ -2,7 +2,6 @@ package redstoneparadox.cardboardbox.gui.nodes
 
 import net.minecraft.client.font.FontRenderer
 import net.minecraft.client.gui.Gui
-import redstoneparadox.cardboardbox.container.CardboardContainer
 
 /**
  * Created by RedstoneParadox on 12/30/2018.
@@ -21,9 +20,9 @@ open class GuiNode(var name : String, var x : Float, var y : Float) {
 
     var children : ArrayList<GuiNode> = ArrayList()
 
-    fun setupClient(gui : Gui) {
-        setupSelfClient(gui)
-        setupChildrenClient(gui)
+    fun setup(gui : Gui) {
+        setupSelf(gui)
+        setupChildren(gui)
     }
 
     /**
@@ -31,44 +30,18 @@ open class GuiNode(var name : String, var x : Float, var y : Float) {
      *
      * @param gui the Gui this node's tree is attached to.
      */
-    open fun setupSelfClient(gui: Gui) {
+    open fun setupSelf(gui: Gui) {
 
     }
 
-    private fun setupChildrenClient(gui : Gui) {
+    private fun setupChildren(gui : Gui) {
 
         if (children.isEmpty()) {
             return
         }
 
         for (child in children) {
-            child.setupClient(gui)
-        }
-    }
-
-    fun setup(cardboardContainer: CardboardContainer) {
-        setupSelf(cardboardContainer)
-        setupChildren(cardboardContainer)
-    }
-
-
-    /**
-     * Function for setup of all GuiNodes in a GuiTree,
-     *
-     * @param cardboardContainer the container this node's tree is attached to.
-     */
-    open fun setupSelf(cardboardContainer: CardboardContainer) {
-
-    }
-
-    fun setupChildren(cardboardContainer: CardboardContainer) {
-
-        if (children.isEmpty()) {
-            return
-        }
-
-        for (child in children) {
-            child.setup(cardboardContainer)
+            child.setup(gui)
         }
     }
 

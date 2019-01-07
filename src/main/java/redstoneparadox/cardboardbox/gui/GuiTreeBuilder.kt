@@ -1,5 +1,6 @@
 package redstoneparadox.cardboardbox.gui
 
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.util.Identifier
 import redstoneparadox.cardboardbox.container.InventoryType
 import redstoneparadox.cardboardbox.gui.nodes.GuiNode
@@ -15,13 +16,14 @@ import redstoneparadox.cardboardbox.misc.GuiTreeManager
  * SlotNodes need to be able to update the position of their respective slots on both sides
  *
  * @param identifier The identifier for the built tree.
+ * @param playerEntity the player that opens the GUI.
  */
-class GuiTreeBuilder(val identifier: Identifier) {
+class GuiTreeBuilder(val identifier: Identifier, val playerEntity: PlayerEntity) {
 
     private val tree : GuiTree
 
     init {
-        tree = GuiTree(identifier)
+        tree = GuiTree(identifier, playerEntity)
     }
 
     /**
