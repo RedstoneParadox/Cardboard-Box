@@ -72,7 +72,7 @@ class CardboardContainer(int1 : Int, var pos: BlockPos, val player : PlayerEntit
         val rows = ((inventory.invSize)/9)
         val columns = ((inventory.invSize)/3)
 
-        var iteration : Int = 0
+        var iteration : Int = 9
 
         for (j in 0 until rows) {
 
