@@ -1,6 +1,7 @@
-package redstoneparadox.cardboardbox.misc
+package redstoneparadox.cardboardbox.gui.util
 
 import redstoneparadox.cardboardbox.gui.GuiTree
+import redstoneparadox.cardboardbox.misc.GuiTreeController
 
 /**
  * Created by RedstoneParadox on 1/3/2019.
@@ -23,7 +24,7 @@ object GuiTreeManager {
         trees.remove(guiTree)
 
         for (controller in controllers) {
-            controller.removeTree(guiTree)
+            controller.cleanup(guiTree)
         }
     }
 

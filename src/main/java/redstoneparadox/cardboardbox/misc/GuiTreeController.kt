@@ -1,6 +1,7 @@
 package redstoneparadox.cardboardbox.misc
 
 import redstoneparadox.cardboardbox.gui.GuiTree
+import redstoneparadox.cardboardbox.gui.nodes.GuiNode
 
 /**
  * Created by RedstoneParadox on 12/30/2018.
@@ -20,11 +21,23 @@ interface GuiTreeController {
     fun receive(guiTree: GuiTree)
 
     /**
-     * Used to notify the controller when a tree's Container or Gui is closed.
+     * Notifies the controller if a GuiNode has been updated.
+     *
+     * @param guiNode the GuiNode that has been updated.
+     */
+    fun nodeUpdate(tree: GuiTree, guiNode: GuiNode) {
+
+    }
+
+    /**
+     * Used to notify the controller when a tree's Container or Gui is closed so that the controller can remove any
+     * references to the tree; you only need to override this if you store a reference to the tree.
      *
      * @param guiTree the tree that is being removed.
      */
-    fun removeTree(guiTree: GuiTree)
+    fun cleanup(guiTree: GuiTree) {
+
+    }
 
 }
 

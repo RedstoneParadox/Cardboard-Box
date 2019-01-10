@@ -14,7 +14,6 @@ import net.minecraft.container.Container
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.inventory.Inventory
 import net.minecraft.item.ItemStack
-import net.minecraft.text.TextComponent
 import net.minecraft.util.DefaultedList
 import net.minecraft.util.Hand
 import net.minecraft.util.Identifier
@@ -31,13 +30,10 @@ import redstoneparadox.cardboardbox.container.InventoryType
 import redstoneparadox.cardboardbox.gui.ContainerTreeGUI
 import redstoneparadox.cardboardbox.gui.GuiTree
 import redstoneparadox.cardboardbox.gui.GuiTreeBuilder
-import redstoneparadox.cardboardbox.gui.nodes.ColoredRectNode
-import redstoneparadox.cardboardbox.gui.nodes.LabelNode
-import redstoneparadox.cardboardbox.gui.nodes.SlotNode
-import redstoneparadox.cardboardbox.gui.nodes.TextureRectNode
+import redstoneparadox.cardboardbox.gui.nodes.*
+import redstoneparadox.cardboardbox.gui.util.GuiTreeManager
+import redstoneparadox.cardboardbox.gui.util.RGBAColor
 import redstoneparadox.cardboardbox.misc.GuiTreeController
-import redstoneparadox.cardboardbox.misc.GuiTreeManager
-import redstoneparadox.cardboardbox.misc.RGBAColor
 import redstoneparadox.cardboardbox.reference.ReferenceOneMain.Companion.EXAMPLE_ONE_ID
 import redstoneparadox.cardboardbox.registry.GuiTreeSupplierRegistry
 
@@ -65,9 +61,9 @@ class ReferenceOneMain : ModInitializer {
          * When registering the container, make sure to use the same Identifier you use to register the GuiTree supplier
          * as that is the Identifier that the CardboardContainer uses to get the GuiTree supplier.
          */
-        ContainerProviderRegistry.INSTANCE.registerFactory(EXAMPLE_ONE_ID) { identifier, player, buf ->
+        ContainerProviderRegistry.INSTANCE.registerFactory(EXAMPLE_ONE_ID) { syncId, identifier, player, buf ->
             val pos : BlockPos = buf.readBlockPos()
-            return@registerFactory CardboardContainer(pos, player, identifier)
+            return@registerFactory CardboardContainer(syncId, pos, player, identifier)
         }
 
     }
@@ -89,14 +85,18 @@ class ReferenceOneClient : ClientModInitializer {
          * and a player. The GuiTree has a label node with the text `Position: ` and a second one which is blank. The
          * second one will later be set to display the position of the player when they open the gui.
          */
-        GuiTreeSupplierRegistry.registerSupplier(EXAMPLE_ONE_ID) { id: Identifier, player: PlayerEntity ->
-            GuiTreeBuilder(id, player)
-                    .addNode(ColoredRectNode("color", 10f, 10f, 100f, 60f, RGBAColor.Presets.WHITE.pick()))
-                    .addNode(LabelNode("header_label", 20f, 20f, "Position:"))
-                    .addNode(LabelNode("position_label", 20f, 40f, ""))
-                    .addNode(TextureRectNode("backgrounds", 0f, 0f, 256, 256, Identifier("textures/gui/container/shulker_box.png")))
+        GuiTreeSupplierRegistry.registerSupplier(EXAMPLE_ONE_ID) { id, player, gui ->
+            var builder = GuiTreeBuilder(id, player, gui, 10f, 10f)
+            var tree : GuiTree = builder.tree
+
+            builder
+                    .addNode(ColoredRectNode("color", 10f, 10f, tree,100f, 60f, RGBAColor.Presets.WHITE.pick()))
+                    .addNode(HoverNode("area", 10f, 10f, tree, 100f, 60f))
+                    .addNode(LabelNode("header_label", 20f, 20f, tree, "Position:"))
+                    .addNode(LabelNode("position_label", 20f, 40f, tree, ""))
+                    .addNode(TextureRectNode("backgrounds", 0f, 0f, tree, 256, 256, Identifier("textures/gui/container/shulker_box.png")))
                     .addPlayerInventory(8f,84f)
-                    .addNodeGrid(SlotNode("container", 8f, 18f, InventoryType.CONTAINER, 0), 3, 9, 18f, 18f)
+                    .addNodeGrid(SlotNode("container", 8f, 18f, tree, InventoryType.CONTAINER, 0), 3, 9, 18f, 18f)
                     .build()
         }
 
@@ -111,6 +111,8 @@ class ReferenceOneClient : ClientModInitializer {
 class ExampleOneBlockEntity : BlockEntity(ReferenceOneMain.EXAMPLE_ONE_BE), GuiTreeController, Inventory {
 
     val inventory = DefaultedList.create(invSize, ItemStack.EMPTY)
+
+    var labelNode : LabelNode? = null
 
     init {
         GuiTreeManager.addController(this)
@@ -128,15 +130,28 @@ class ExampleOneBlockEntity : BlockEntity(ReferenceOneMain.EXAMPLE_ONE_BE), GuiT
          * is, it sets the LabelNode's text to display the player's position.
          */
         if (guiTree.identifier == ReferenceOneMain.EXAMPLE_ONE_ID) {
-            (guiTree.getChild("position_label") as LabelNode).text = guiTree.player.pos.toString()
+            labelNode = (guiTree.getChild("position_label") as LabelNode)
+
+            labelNode!!.text = guiTree.player.pos.toString()
+            guiTree.listeners.add(this)
         }
     }
 
-    /**
-     * Since there is no reference to the tree being stored, nothing needs to be done here.
-     */
-    override fun removeTree(guiTree: GuiTree) {
+    override fun nodeUpdate(tree: GuiTree, guiNode: GuiNode) {
+        if (guiNode is HoverNode) {
+            if (guiNode.isMouseInside) {
+                labelNode!!.text = "Hello, mouse!"
+            }
+            else {
+                labelNode!!.text = "Goodbye, mouse!"
+            }
 
+            (tree.gui as ContainerTreeGUI).forceUpdate()
+        }
+    }
+
+    override fun cleanup(guiTree: GuiTree) {
+        super.cleanup(guiTree)
     }
 
     //Inventory functions
@@ -187,37 +202,10 @@ class ExampleOneBlockEntity : BlockEntity(ReferenceOneMain.EXAMPLE_ONE_BE), GuiT
         return true
     }
 
-    override fun getInvProperty(i: Int): Int {
-        return 0
-    }
-
-    override fun setInvProperty(i: Int, i1: Int) {
-
-    }
-
-    override fun getInvPropertyCount(): Int {
-        return 0
-    }
-
-    override fun getInvHeight(): Int {
-        return 2
-    }
-
-    override fun getInvWidth(): Int {
-        return 2
-    }
-
     override fun clearInv() {
         inventory.clear()
     }
 
-    override fun getName(): TextComponent? {
-        return null
-    }
-
-    override fun hasCustomName(): Boolean {
-        return false
-    }
 }
 
 /**

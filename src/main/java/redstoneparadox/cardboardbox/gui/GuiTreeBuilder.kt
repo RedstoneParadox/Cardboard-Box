@@ -1,11 +1,12 @@
 package redstoneparadox.cardboardbox.gui
 
+import net.minecraft.client.gui.Gui
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.util.Identifier
 import redstoneparadox.cardboardbox.container.InventoryType
 import redstoneparadox.cardboardbox.gui.nodes.GuiNode
 import redstoneparadox.cardboardbox.gui.nodes.SlotNode
-import redstoneparadox.cardboardbox.misc.GuiTreeManager
+import redstoneparadox.cardboardbox.gui.util.GuiTreeManager
 
 /**
  * Created by RedstoneParadox on 1/2/2019.
@@ -18,13 +19,9 @@ import redstoneparadox.cardboardbox.misc.GuiTreeManager
  * @param identifier The identifier for the built tree.
  * @param playerEntity the player that opens the GUI.
  */
-class GuiTreeBuilder(val identifier: Identifier, val playerEntity: PlayerEntity) {
+class GuiTreeBuilder(val identifier: Identifier, val playerEntity: PlayerEntity, val gui: Gui, val x: Float, val y: Float) {
 
-    private val tree : GuiTree
-
-    init {
-        tree = GuiTree(identifier, playerEntity)
-    }
+    val tree : GuiTree = GuiTree(identifier, playerEntity, gui, x, y)
 
     /**
      * Adds a node to the root of the tree.
@@ -109,8 +106,8 @@ class GuiTreeBuilder(val identifier: Identifier, val playerEntity: PlayerEntity)
      * vanilla containers but the exact value may depend on the size of the container.
      */
     fun addPlayerInventory(xPos : Float, yPos : Float): GuiTreeBuilder {
-        addNodeGrid(SlotNode("player_slot", xPos, yPos, InventoryType.PLAYER, 0), 3, 9, 18f, 18f)
-        addNodeGrid(SlotNode("hotbar_slot", xPos, yPos + 58f, InventoryType.HOTBAR, 0), 1, 9, 18f, 18f)
+        addNodeGrid(SlotNode("player_slot", xPos, yPos, tree, InventoryType.PLAYER, 0), 3, 9, 18f, 18f)
+        addNodeGrid(SlotNode("hotbar_slot", xPos, yPos + 58f, tree, InventoryType.HOTBAR, 0), 1, 9, 18f, 18f)
 
         return this
     }

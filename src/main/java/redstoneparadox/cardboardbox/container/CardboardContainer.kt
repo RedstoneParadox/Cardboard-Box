@@ -1,5 +1,6 @@
 package redstoneparadox.cardboardbox.container
 
+import net.minecraft.class_3917
 import net.minecraft.container.Container
 import net.minecraft.container.Slot
 import net.minecraft.entity.player.PlayerEntity
@@ -11,7 +12,11 @@ import redstoneparadox.cardboardbox.networking.NetworkUtil
 /**
  * Created by RedstoneParadox on 12/30/2018.
  */
-class CardboardContainer(var pos: BlockPos, val player : PlayerEntity, val id : Identifier) : Container() {
+class CardboardContainer(int1 : Int, var pos: BlockPos, val player : PlayerEntity, val id : Identifier) : Container(int1) {
+
+    override fun method_17358(): class_3917<*>? {
+        return null
+    }
 
     var playerSlotList : ArrayList<Slot> = ArrayList()
     var hotbarSlotList : ArrayList<Slot> = ArrayList()
@@ -82,4 +87,6 @@ class CardboardContainer(var pos: BlockPos, val player : PlayerEntity, val id : 
         slot.xPosition = x
         slot.yPosition = y
     }
+
+
 }

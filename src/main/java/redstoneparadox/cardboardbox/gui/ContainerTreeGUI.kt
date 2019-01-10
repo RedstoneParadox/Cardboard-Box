@@ -9,18 +9,18 @@ import net.minecraft.util.Identifier
 import redstoneparadox.cardboardbox.client.hooks.IGui
 import redstoneparadox.cardboardbox.container.CardboardContainer
 import redstoneparadox.cardboardbox.gui.nodes.GuiNode
-import redstoneparadox.cardboardbox.misc.RGBAColor
+import redstoneparadox.cardboardbox.gui.util.RGBAColor
 import redstoneparadox.cardboardbox.registry.GuiTreeSupplierRegistry
 
 /**
  * Created by RedstoneParadox on 12/30/2018.
  */
-class ContainerTreeGUI(cardboardContainer: CardboardContainer, id : Identifier) : ContainerGui(cardboardContainer), IGui {
+class ContainerTreeGUI(cardboardContainer: CardboardContainer, id : Identifier) : ContainerGui<CardboardContainer>(cardboardContainer, cardboardContainer.player.inventory, null), IGui {
 
     var float: Float = 0f
     var int1: Int = 0
     var int2: Int = 0
-    private var guiTree : GuiTree = GuiTreeSupplierRegistry.supplyTree(id, cardboardContainer.player)!!
+    private var guiTree : GuiTree = GuiTreeSupplierRegistry.supplyTree(id, cardboardContainer.player, this)!!
 
     /**
      * Forces the Gui to redraw.
@@ -102,5 +102,22 @@ class ContainerTreeGUI(cardboardContainer: CardboardContainer, id : Identifier) 
 
     fun getChild(name : String) : GuiNode? {
         return guiTree.getChild(name)
+    }
+
+    override fun onClosed() {
+        guiTree.cleanup()
+        super.onClosed()
+    }
+
+    fun getCardboardContainer() : CardboardContainer {
+        return container as CardboardContainer
+    }
+
+    fun getLeft() : Int {
+        return left
+    }
+
+    fun getTop() : Int {
+        return top
     }
 }

@@ -1,4 +1,4 @@
-package redstoneparadox.cardboardbox.misc
+package redstoneparadox.cardboardbox.gui.util
 
 /**
  * Created by RedstoneParadox on 1/6/2019.

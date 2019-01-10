@@ -13,13 +13,13 @@ minecraft{
 
 }
 
-dependencies { 
-	minecraft "com.mojang:minecraft:18w50a"
-	mappings "net.fabricmc:yarn:18w50a.90"
-	modCompile (group: "net.fabricmc", name: "fabric-loader", version: "0.3.2.91")
+dependencies {
+	minecraft "com.mojang:minecraft:19w02a"
+	mappings "net.fabricmc:yarn:19w02a.12"
+	modCompile (group: "net.fabricmc", name: "fabric-loader", version: "0.3.2.92")
 
 	//Fabric API. This is technically optional, but you probably want it anyway.
-	modCompile (group: "net.fabricmc", name: "fabric", version: "0.1.4.69")
+	modCompile (group: "net.fabricmc", name: "fabric", version: "0.1.4.71")
 	modCompileMapped (group: "net.fabricmc", name: "fabric-language-kotlin", version: "1.3.10-29")
 	compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 }

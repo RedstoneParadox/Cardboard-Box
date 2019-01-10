@@ -2,6 +2,8 @@ package redstoneparadox.cardboardbox.gui.nodes
 
 import net.minecraft.client.font.FontRenderer
 import net.minecraft.client.gui.Gui
+import redstoneparadox.cardboardbox.gui.GuiTree
+import redstoneparadox.cardboardbox.gui.nodes.interfaces.GuiTreeElement
 
 /**
  * Created by RedstoneParadox on 12/30/2018.
@@ -13,20 +15,28 @@ import net.minecraft.client.gui.Gui
  * @param name the specific name of the component in the tree.
  * @param x The x position on screen.
  * @param y The y position on screen.
+ * @param root the GuiTree.
  *
  * Unless otherwise noted in child classes, all constructor parameters here have the same uses.
  */
-open class GuiNode(var name : String, var x : Float, var y : Float) {
+open class GuiNode(var name: String, override var x: Float, override var y: Float, var root: GuiTree) : GuiTreeElement {
 
     var children : ArrayList<GuiNode> = ArrayList()
 
-    fun setup(gui : Gui) {
+    val originalX = x
+    val originalY = y
+
+    fun setup(gui: Gui, tree: GuiTree, treeElement: GuiTreeElement) {
+        root = tree
+
+        x += treeElement.x
+        y += treeElement.y
         setupSelf(gui)
-        setupChildren(gui)
+        setupChildren(gui, tree, treeElement)
     }
 
     /**
-     * Function for client-sided setup of all GuiNodes in a GuiTree,
+     * Function for setup of all GuiNodes in a GuiTree,
      *
      * @param gui the Gui this node's tree is attached to.
      */
@@ -34,20 +44,41 @@ open class GuiNode(var name : String, var x : Float, var y : Float) {
 
     }
 
-    private fun setupChildren(gui : Gui) {
+    private fun setupChildren(gui: Gui, tree: GuiTree, treeElement: GuiTreeElement) {
 
         if (children.isEmpty()) {
             return
         }
 
         for (child in children) {
-            child.setup(gui)
+            child.setup(gui, tree, treeElement)
+        }
+    }
+
+    fun cleanup() {
+        cleanupSelf()
+        cleanupChildren()
+    }
+
+    /**
+     * Function used for any cleanup operations that may need to occur.
+     */
+    open fun cleanupSelf() {
+
+    }
+
+    private fun cleanupChildren() {
+        for (child in children) {
+            child.cleanup()
         }
     }
 
     fun draw(gui: Gui, float: Float, int1: Int, int2: Int, fontRenderer: FontRenderer) {
         drawSelf(gui, float, int1, int2)
         drawChildren(gui, float, int1, int2, fontRenderer)
+
+        x = originalX
+        y = originalY
     }
 
     /**
@@ -57,7 +88,6 @@ open class GuiNode(var name : String, var x : Float, var y : Float) {
      * @param float Unknown Minecraft parameter.
      * @param int1 Unknown Minecraft parameter.
      * @param int2 Unknown.
-     * @param fontRenderer The font renderer.
      */
     open fun drawSelf(gui: Gui, float: Float, int1: Int, int2: Int) {
 
@@ -71,7 +101,7 @@ open class GuiNode(var name : String, var x : Float, var y : Float) {
      * @param iteration the number of this node. Iteration 0 is the original copy of the node.
      */
     open fun createGridCopy(xShift: Float, yShift: Float, iteration: Int): GuiNode {
-        return GuiNode(name + "_" + iteration.toString(), x + xShift, y + yShift)
+        return GuiNode(name + "_" + iteration.toString(), x + xShift, y + yShift, root)
     }
 
     private fun drawChildren(gui: Gui, float: Float, int1: Int, int2: Int, fontRenderer: FontRenderer) {
