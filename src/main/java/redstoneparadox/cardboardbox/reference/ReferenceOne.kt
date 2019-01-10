@@ -26,13 +26,11 @@ import net.minecraft.world.BlockView
 import net.minecraft.world.World
 import redstoneparadox.cardboardbox.CardboardBox
 import redstoneparadox.cardboardbox.container.CardboardContainer
-import redstoneparadox.cardboardbox.container.InventoryType
 import redstoneparadox.cardboardbox.gui.ContainerTreeGUI
 import redstoneparadox.cardboardbox.gui.GuiTree
 import redstoneparadox.cardboardbox.gui.GuiTreeBuilder
-import redstoneparadox.cardboardbox.gui.nodes.*
+import redstoneparadox.cardboardbox.gui.nodes.LabelNode
 import redstoneparadox.cardboardbox.gui.util.GuiTreeManager
-import redstoneparadox.cardboardbox.gui.util.RGBAColor
 import redstoneparadox.cardboardbox.misc.GuiTreeController
 import redstoneparadox.cardboardbox.reference.ReferenceOneMain.Companion.EXAMPLE_ONE_ID
 import redstoneparadox.cardboardbox.registry.GuiTreeSupplierRegistry
@@ -90,13 +88,13 @@ class ReferenceOneClient : ClientModInitializer {
             var tree : GuiTree = builder.tree
 
             builder
-                    .addNode(ColoredRectNode("color", 10f, 10f, tree,100f, 60f, RGBAColor.Presets.WHITE.pick()))
-                    .addNode(HoverNode("area", 10f, 10f, tree, 100f, 60f))
-                    .addNode(LabelNode("header_label", 20f, 20f, tree, "Position:"))
-                    .addNode(LabelNode("position_label", 20f, 40f, tree, ""))
-                    .addNode(TextureRectNode("backgrounds", 0f, 0f, tree, 256, 256, Identifier("textures/gui/container/shulker_box.png")))
-                    .addPlayerInventory(8f,84f)
-                    .addNodeGrid(SlotNode("container", 8f, 18f, tree, InventoryType.CONTAINER, 0), 3, 9, 18f, 18f)
+                    //.addNode(ColoredRectNode("color", 10f, 10f, tree,100f, 60f, RGBAColor.Presets.WHITE.pick()))
+                    //.addNode(HoverNode("area", 10f, 10f, tree, 100f, 60f))
+                    //.addNode(LabelNode("header_label", 20f, 20f, tree, "Position:"))
+                    //.addNode(LabelNode("position_label", 20f, 40f, tree, ""))
+                    //.addNode(TextureRectNode("backgrounds", 0f, 0f, tree, 256, 256, Identifier("textures/gui/container/shulker_box.png")))
+                    //.addPlayerInventory(8f,84f)
+                    //.addNodeGrid(SlotNode("container", 8f, 18f, tree, InventoryType.CONTAINER, 0), 3, 9, 18f, 18f)
                     .build()
         }
 
@@ -123,6 +121,7 @@ class ExampleOneBlockEntity : BlockEntity(ReferenceOneMain.EXAMPLE_ONE_BE), GuiT
      */
     var countdown : Int = 20
 
+
     override fun receive(guiTree: GuiTree) {
 
         /**
@@ -130,13 +129,14 @@ class ExampleOneBlockEntity : BlockEntity(ReferenceOneMain.EXAMPLE_ONE_BE), GuiT
          * is, it sets the LabelNode's text to display the player's position.
          */
         if (guiTree.identifier == ReferenceOneMain.EXAMPLE_ONE_ID) {
-            labelNode = (guiTree.getChild("position_label") as LabelNode)
+            //labelNode = (guiTree.getChild("position_label") as LabelNode)
 
-            labelNode!!.text = guiTree.player.pos.toString()
-            guiTree.listeners.add(this)
+            //labelNode!!.text = guiTree.player.pos.toString()
+            //guiTree.listeners.add(this)
         }
     }
 
+    /*
     override fun nodeUpdate(tree: GuiTree, guiNode: GuiNode) {
         if (guiNode is HoverNode) {
             if (guiNode.isMouseInside) {
@@ -149,10 +149,7 @@ class ExampleOneBlockEntity : BlockEntity(ReferenceOneMain.EXAMPLE_ONE_BE), GuiT
             (tree.gui as ContainerTreeGUI).forceUpdate()
         }
     }
-
-    override fun cleanup(guiTree: GuiTree) {
-        super.cleanup(guiTree)
-    }
+    */
 
     //Inventory functions
     override fun getInvSize(): Int {

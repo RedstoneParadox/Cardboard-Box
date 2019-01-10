@@ -7,6 +7,7 @@ import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.inventory.Inventory
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
+import redstoneparadox.cardboardbox.ISlot
 import redstoneparadox.cardboardbox.networking.NetworkUtil
 
 /**
@@ -18,9 +19,7 @@ class CardboardContainer(int1 : Int, var pos: BlockPos, val player : PlayerEntit
         return null
     }
 
-    var playerSlotList : ArrayList<Slot> = ArrayList()
-    var hotbarSlotList : ArrayList<Slot> = ArrayList()
-    var containerSlotList : ArrayList<Slot> = ArrayList()
+    var printSlots : Boolean = false
 
     init {
         inventoryToSlots()
@@ -36,41 +35,52 @@ class CardboardContainer(int1 : Int, var pos: BlockPos, val player : PlayerEntit
         }
 
         for (i in 0..8) {
-            addHotbarSlot(Slot(player.inventory, i, (20 * (i + 1)), 120))
+            addSlot(Slot(player.inventory, i, (20 * (i + 1)), 120))
         }
 
-        for (i in 9..17) {
-            addPlayerSlot(Slot(player.inventory, i, (20 * (i - 8)),60))
-        }
-
-        for (i in 18..26) {
-            addPlayerSlot(Slot(player.inventory, i, (20 * (i - 17)), 80))
-        }
-
-        for (i in 27..35) {
-            addPlayerSlot(Slot(player.inventory, i, (20 * (i - 26)), 100))
-        }
+        addPlayerSlots()
 
         if (inventory != null) {
-            for (i in 0..(inventory.invSize - 1)) {
-                addContainerSlot(Slot(inventory, i, (20 * i), 20))
+            addInventorySlots(inventory)
+        }
+
+        if (printSlots) {
+            for (slot in slotList) {
+                println("[${(slot as ISlot).invSlot}, ${slot.inventory}, ${slot.id}]")
+            }
+            printSlots = false
+        }
+    }
+
+    private fun addPlayerSlots() {
+        var iteration : Int = 0
+
+        for (j in 0 until 3) {
+
+            for (i in 0 until 9) {
+                addSlot(Slot(player.inventory, iteration, (18 * i) + 2, (18 * j) + 60))
+                iteration += 1
             }
         }
     }
 
-    private fun addPlayerSlot(slot: Slot) {
-        playerSlotList.add(slot)
-        addSlot(slot)
-    }
+    private fun addInventorySlots(inventory : Inventory) {
+        method_17359(inventory, inventory.invSize)
+        inventory.onInvOpen(player)
 
-    private fun addHotbarSlot(slot: Slot) {
-        hotbarSlotList.add(slot)
-        addSlot(slot)
-    }
 
-    private fun addContainerSlot(slot : Slot) {
-        containerSlotList.add(slot)
-        addSlot(slot)
+        val rows = ((inventory.invSize)/9)
+        val columns = ((inventory.invSize)/3)
+
+        var iteration : Int = 0
+
+        for (j in 0 until rows) {
+
+            for (i in 0 until columns) {
+                addSlot(Slot(inventory, iteration, (18 * i) + 2, 140 + (18 * j)))
+                iteration += 1
+            }
+        }
     }
 
     override fun canUse(player: PlayerEntity): Boolean {

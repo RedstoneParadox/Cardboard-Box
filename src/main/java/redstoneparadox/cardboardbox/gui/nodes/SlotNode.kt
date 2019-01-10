@@ -20,15 +20,26 @@ import kotlin.math.roundToInt
  */
 class SlotNode(name: String, x: Float, y: Float, root : GuiTree, val type: InventoryType, val index: Int) : GuiNode(name, x, y, root) {
 
+    private var noDraw = false
+
     override fun setupSelf(gui : Gui) {
-        val slot : Slot = when (type) {
-            InventoryType.CONTAINER -> (gui as ContainerTreeGUI).getCardboardContainer().getSlot(index + 36)
-            InventoryType.PLAYER -> (gui as ContainerTreeGUI).getCardboardContainer().getSlot(index + 9)
-            InventoryType.HOTBAR -> (gui as ContainerTreeGUI).getCardboardContainer().getSlot(index)
+
+        val slot: Slot
+
+        try {
+            slot = when (type) {
+                InventoryType.CONTAINER -> (gui as ContainerTreeGUI).getCardboardContainer().getSlot(index + 36)
+                InventoryType.PLAYER -> (gui as ContainerTreeGUI).getCardboardContainer().getSlot(index + 9)
+                InventoryType.HOTBAR -> (gui as ContainerTreeGUI).getCardboardContainer().getSlot(index)
+            }
+        }
+        catch(e : IndexOutOfBoundsException) {
+            println("Error: Slot [$index] does not exist! This SlotNode will not be drawn!")
+            return
         }
 
-        var actualX : Int = (x.roundToInt()) - gui.getLeft()
-        var actualY : Int = (y.roundToInt()) - gui.getTop()
+        val actualX : Int = (x.roundToInt()) - gui.getLeft()
+        val actualY : Int = (y.roundToInt()) - gui.getTop()
 
         slot.xPosition = actualX
         slot.yPosition = actualY

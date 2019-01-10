@@ -5,22 +5,30 @@ import net.minecraft.client.gui.ContainerGui
 import net.minecraft.client.render.BufferBuilder
 import net.minecraft.client.render.Tessellator
 import net.minecraft.client.render.VertexFormats
+import net.minecraft.text.StringTextComponent
 import net.minecraft.util.Identifier
+import redstoneparadox.cardboardbox.ISlot
 import redstoneparadox.cardboardbox.client.hooks.IGui
 import redstoneparadox.cardboardbox.container.CardboardContainer
 import redstoneparadox.cardboardbox.gui.nodes.GuiNode
 import redstoneparadox.cardboardbox.gui.util.RGBAColor
 import redstoneparadox.cardboardbox.registry.GuiTreeSupplierRegistry
+import kotlin.math.roundToInt
 
 /**
  * Created by RedstoneParadox on 12/30/2018.
  */
-class ContainerTreeGUI(cardboardContainer: CardboardContainer, id : Identifier) : ContainerGui<CardboardContainer>(cardboardContainer, cardboardContainer.player.inventory, null), IGui {
+class ContainerTreeGUI(cardboardContainer: CardboardContainer, id : Identifier) : ContainerGui<CardboardContainer>(cardboardContainer, cardboardContainer.player.inventory, StringTextComponent("")), IGui {
 
     var float: Float = 0f
     var int1: Int = 0
     var int2: Int = 0
     private var guiTree : GuiTree = GuiTreeSupplierRegistry.supplyTree(id, cardboardContainer.player, this)!!
+
+    init {
+        left = guiTree.x.roundToInt()
+        top = guiTree.y.roundToInt()
+    }
 
     /**
      * Forces the Gui to redraw.
@@ -40,6 +48,10 @@ class ContainerTreeGUI(cardboardContainer: CardboardContainer, id : Identifier) 
         this.int2 = p2
 
         guiTree.drawChildren(this, p0, p1, p2, fontRenderer)
+
+        for (slot in container.slotList) {
+            println("[${(slot as ISlot).invSlot}, ${slot.inventory}, ${slot.id}]")
+        }
     }
 
     /**
@@ -120,4 +132,6 @@ class ContainerTreeGUI(cardboardContainer: CardboardContainer, id : Identifier) 
     fun getTop() : Int {
         return top
     }
+
+
 }
