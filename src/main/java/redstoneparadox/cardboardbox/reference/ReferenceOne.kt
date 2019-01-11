@@ -216,6 +216,8 @@ class ReferenceOneBlock : BlockWithEntity(Settings.of(Material.STONE)) {
 
     override fun activate(blockState_1: BlockState, world_1: World, blockPos_1: BlockPos, playerEntity_1: PlayerEntity, hand_1: Hand, direction_1: Direction, float_1: Float, float_2: Float, float_3: Float): Boolean {
         if (!world_1.isClient() && hasBlockEntity()) {
+
+
             ContainerProviderRegistry.INSTANCE.openContainer(ReferenceOneMain.EXAMPLE_ONE_ID, playerEntity_1) { it.writeBlockPos(blockPos_1)}
         }
 
