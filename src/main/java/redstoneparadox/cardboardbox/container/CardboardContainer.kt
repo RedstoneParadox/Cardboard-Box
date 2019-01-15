@@ -1,9 +1,10 @@
 package redstoneparadox.cardboardbox.container
 
-import net.minecraft.class_3917
 import net.minecraft.container.Container
+import net.minecraft.container.ContainerType
 import net.minecraft.container.Slot
 import net.minecraft.entity.player.PlayerEntity
+import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.inventory.Inventory
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
@@ -12,9 +13,11 @@ import redstoneparadox.cardboardbox.networking.NetworkUtil
 /**
  * Created by RedstoneParadox on 12/30/2018.
  */
-class CardboardContainer(syncID : Int, var pos: BlockPos, val player : PlayerEntity, val id : Identifier) : Container(syncID) {
+class CardboardContainer(syncID : Int, val pos: BlockPos, val player : PlayerEntity, val id : Identifier) : Container(syncID) {
 
-    override fun method_17358(): class_3917<*>? {
+    private val playerInventory : PlayerInventory = player.inventory
+
+    override fun getType(): ContainerType<CardboardContainer>? {
         return null
     }
 
@@ -43,20 +46,20 @@ class CardboardContainer(syncID : Int, var pos: BlockPos, val player : PlayerEnt
         var iteration : Int = 9
 
         for (i in 0 until 9) {
-            addSlot(Slot(player.inventory, i, (18 * i) + 2, 120))
+            addSlot(Slot(playerInventory, i, (18 * i) + 2, 120))
         }
 
         for (j in 0 until 3) {
 
             for (i in 0 until 9) {
-                addSlot(Slot(player.inventory, iteration, (18 * i) + 2, (18 * j) + 60))
+                addSlot(Slot(playerInventory, iteration, (18 * i) + 2, (18 * j) + 60))
                 iteration += 1
             }
         }
     }
 
     private fun addInventorySlots(inventory : Inventory) {
-        method_17359(inventory, inventory.invSize)
+        checkContainerSize(inventory, inventory.invSize)
         inventory.onInvOpen(player)
 
 
