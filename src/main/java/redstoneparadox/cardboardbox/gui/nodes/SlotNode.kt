@@ -1,13 +1,12 @@
 package redstoneparadox.cardboardbox.gui.nodes
 
-import net.minecraft.client.gui.Gui
 import net.minecraft.client.network.ClientPlayerEntity
+import net.minecraft.container.Container
 import net.minecraft.container.Slot
 import redstoneparadox.cardboardbox.container.InventoryType
-import redstoneparadox.cardboardbox.gui.ContainerTreeGUI
 import redstoneparadox.cardboardbox.gui.GuiTree
+import redstoneparadox.cardboardbox.gui.TreeGui
 import redstoneparadox.cardboardbox.networking.NetworkUtil
-import kotlin.math.roundToInt
 
 /**
  * Created by RedstoneParadox on 12/31/2018.
@@ -18,38 +17,43 @@ import kotlin.math.roundToInt
  *
  * @param index the index of the slot to draw.
  */
-class SlotNode(name: String, x: Float, y: Float, root : GuiTree, val type: InventoryType, val index: Int) : GuiNode(name, x, y, root) {
+class SlotNode(name: String, x: Int, y: Int, root : GuiTree, val type: InventoryType, val index: Int) : GuiNode(name, x, y, root) {
 
-    private var noDraw = false
+    override fun setupSelf(treeGui: TreeGui) {
 
-    override fun setupSelf(gui : Gui) {
+        val container : Container? = treeGui.getContainer()
 
-        val slot: Slot
-
-        try {
-            slot = when (type) {
-                InventoryType.CONTAINER -> (gui as ContainerTreeGUI).getCardboardContainer().getSlot(index + 36)
-                InventoryType.PLAYER -> (gui as ContainerTreeGUI).getCardboardContainer().getSlot(index + 9)
-                InventoryType.HOTBAR -> (gui as ContainerTreeGUI).getCardboardContainer().getSlot(index)
-            }
-        }
-        catch(e : IndexOutOfBoundsException) {
-            println("Error: Slot [$index] does not exist! This SlotNode will not be drawn!")
+        if (container == null) {
+            println("Error: The Gui associated with this GuiTree does not have a container!")
             return
         }
 
-        val actualX : Int = (x.roundToInt()) - gui.getLeft()
-        val actualY : Int = (y.roundToInt()) - gui.getTop()
+        val slot: Slot
+        val trueIndex : Int = when(type) {
+            InventoryType.CONTAINER -> index + 36
+            InventoryType.PLAYER -> index + 9
+            InventoryType.HOTBAR -> index
+        }
+
+        if (container.slotList.size <= trueIndex) {
+            println("Error: The Slot at index [$index] does not exist!")
+            return
+        }
+
+        slot = container.getSlot(trueIndex)
+
+        val actualX : Int = x - treeGui.getLeft()
+        val actualY : Int = y - treeGui.getTop()
 
         slot.xPosition = actualX
         slot.yPosition = actualY
 
-        if (gui.getCardboardContainer().player is ClientPlayerEntity) {
-            NetworkUtil.syncSlot(actualX, actualY, index, gui.getCardboardContainer().syncId, (gui.getCardboardContainer().player) as ClientPlayerEntity)
+        if (treeGui.player is ClientPlayerEntity) {
+            NetworkUtil.syncSlot(actualX, actualY, index, container.syncId, (treeGui.player) as ClientPlayerEntity)
         }
     }
 
-    override fun createGridCopy(xShift: Float, yShift: Float, iteration: Int) : GuiNode {
+    override fun createGridCopy(xShift: Int, yShift: Int, iteration: Int) : GuiNode {
         return SlotNode(name +  "_" + iteration.toString(), x + xShift, y + yShift, root, type, index + iteration)
     }
 

@@ -8,26 +8,25 @@ import net.minecraft.client.render.VertexFormats
 import net.minecraft.text.StringTextComponent
 import net.minecraft.text.TextComponent
 import net.minecraft.util.Identifier
-import redstoneparadox.cardboardbox.client.hooks.IGui
 import redstoneparadox.cardboardbox.container.CardboardContainer
 import redstoneparadox.cardboardbox.gui.nodes.GuiNode
 import redstoneparadox.cardboardbox.gui.util.RGBAColor
 import redstoneparadox.cardboardbox.registry.GuiTreeSupplierRegistry
-import kotlin.math.roundToInt
 
 /**
  * Created by RedstoneParadox on 12/30/2018.
  */
-class ContainerTreeGUI(cardboardContainer: CardboardContainer, id : Identifier) : ContainerGui<CardboardContainer>(cardboardContainer, cardboardContainer.player.inventory, StringTextComponent("") as TextComponent?), IGui {
+class ContainerTreeGUI(cardboardContainer: CardboardContainer, override val id : Identifier) : ContainerGui<CardboardContainer>(cardboardContainer, cardboardContainer.player.inventory, StringTextComponent("") as TextComponent?), TreeGui {
 
     var float: Float = 0f
     var int1: Int = 0
     var int2: Int = 0
-    private var guiTree : GuiTree = GuiTreeSupplierRegistry.supplyTree(id, cardboardContainer.player, this)!!
+    override val player = container.player
+    override val guiTree : GuiTree = GuiTreeSupplierRegistry.supplyTree(id, player, this)!!
 
     init {
-        left = guiTree.x.roundToInt()
-        top = guiTree.y.roundToInt()
+        left = guiTree.x
+        top = guiTree.y
     }
 
     /**
@@ -35,10 +34,6 @@ class ContainerTreeGUI(cardboardContainer: CardboardContainer, id : Identifier) 
      */
     fun forceUpdate() {
         draw(int1, int2, float)
-    }
-
-    override fun setup() {
-        guiTree.setup(this)
     }
 
     override fun drawBackground(p0: Float, p1: Int, p2: Int) {
@@ -59,14 +54,14 @@ class ContainerTreeGUI(cardboardContainer: CardboardContainer, id : Identifier) 
      * @param yPos the y position of the string.
      * @param int_1 Unknown.
      */
-    fun drawString(text : String, xPos : Float, yPos : Float, int_1 : Int, withShadow: Boolean) {
+     override fun drawString(text : String, xPos : Int, yPos : Int, withShadow: Boolean) {
 
         if (withShadow) {
-            fontRenderer.drawWithShadow(text, xPos, yPos, int_1)
+            fontRenderer.drawWithShadow(text, xPos.toFloat(), yPos.toFloat(), 0)
 
         }
         else {
-            fontRenderer.draw(text, xPos, yPos, int_1)
+            fontRenderer.draw(text, xPos.toFloat(), yPos.toFloat(), 0)
         }
 
     }
@@ -74,7 +69,7 @@ class ContainerTreeGUI(cardboardContainer: CardboardContainer, id : Identifier) 
     /**
      * Used for drawing rectangles with solid color.
      */
-    fun drawColoredRectangle(xPos: Float, yPos: Float, width : Float, height : Float, primaryColor : RGBAColor, secondaryColor : RGBAColor) {
+    override fun drawColoredRectangle(xPos: Int, yPos: Int, width: Int, height: Int, primaryColor: RGBAColor, secondaryColor: RGBAColor) {
 
         val redPercent = primaryColor.percentRed()
         val greenPercent = primaryColor.percentGreen()
@@ -118,17 +113,27 @@ class ContainerTreeGUI(cardboardContainer: CardboardContainer, id : Identifier) 
         super.onClosed()
     }
 
-    fun getCardboardContainer() : CardboardContainer {
-        return container as CardboardContainer
+    override fun getContainer() : CardboardContainer? {
+        return container
     }
 
-    fun getLeft() : Int {
+    override fun getLeft() : Int {
         return left
     }
 
-    fun getTop() : Int {
+    override fun getTop() : Int {
         return top
     }
 
+    override fun getWidth(): Int {
+        return containerWidth
+    }
 
+    override fun getHeight(): Int {
+        return containerHeight
+    }
+
+    override fun drawTexture(xPos: Int, yPos: Int, width: Int, height: Int) {
+        drawTexturedRect(xPos, yPos, 0, 0, width, height)
+    }
 }

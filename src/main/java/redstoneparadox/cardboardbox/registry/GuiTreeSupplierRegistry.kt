@@ -1,9 +1,9 @@
 package redstoneparadox.cardboardbox.registry
 
-import net.minecraft.client.gui.Gui
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.util.Identifier
 import redstoneparadox.cardboardbox.gui.GuiTree
+import redstoneparadox.cardboardbox.gui.TreeGui
 
 /**
  * Created by RedstoneParadox on 1/3/2019.
@@ -14,7 +14,7 @@ import redstoneparadox.cardboardbox.gui.GuiTree
  */
 object GuiTreeSupplierRegistry {
 
-    private val guiTreeProviders = mutableMapOf<Identifier, (id : Identifier, player : PlayerEntity, gui : Gui) -> GuiTree>()
+    private val guiTreeProviders = mutableMapOf<Identifier, (id : Identifier, player : PlayerEntity, treeGui : TreeGui) -> GuiTree>()
 
     /**
      * Registers a new GuiTree provider
@@ -22,7 +22,7 @@ object GuiTreeSupplierRegistry {
      * @param id the Identifier of the provider.
      * @param treeSupplier The function that suppliers the GuiTree.
      */
-    fun registerSupplier(id : Identifier, treeSupplier : (id : Identifier, player : PlayerEntity, gui : Gui) -> GuiTree) {
+    fun registerSupplier(id : Identifier, treeSupplier : (id : Identifier, player : PlayerEntity, treeGui : TreeGui) -> GuiTree) {
 
         if (guiTreeProviders.containsKey(id)) {
             println("Error, a supplier with an ID of $id already exists!")
@@ -37,7 +37,7 @@ object GuiTreeSupplierRegistry {
      *
      * @param id the Identifier of the supplier.
      */
-    fun supplyTree(id: Identifier, player : PlayerEntity, gui: Gui) : GuiTree? {
-        return guiTreeProviders[id]!!.invoke(id, player, gui)
+    fun supplyTree(id: Identifier, player : PlayerEntity, treeGui : TreeGui) : GuiTree? {
+        return guiTreeProviders[id]!!.invoke(id, player, treeGui)
     }
 }

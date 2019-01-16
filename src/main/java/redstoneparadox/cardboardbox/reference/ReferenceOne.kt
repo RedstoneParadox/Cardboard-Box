@@ -86,8 +86,8 @@ class ReferenceOneClient : ClientModInitializer {
          * and a player. The GuiTree has a label node with the text `Position: ` and a second one which is blank. The
          * second one will later be set to display the position of the player when they open the gui.
          */
-        GuiTreeSupplierRegistry.registerSupplier(EXAMPLE_ONE_ID) { id, player, gui ->
-            val builder = GuiTreeBuilder(id, player, gui, 10f, 10f)
+        GuiTreeSupplierRegistry.registerSupplier(EXAMPLE_ONE_ID) { id, player, treeGui ->
+            val builder = GuiTreeBuilder(id, player, treeGui, 10, 10)
             val tree : GuiTree = builder.tree
 
             builder
@@ -95,9 +95,9 @@ class ReferenceOneClient : ClientModInitializer {
                     //.addNode(HoverNode("area", 10f, 10f, tree, 100f, 60f))
                     //.addNode(LabelNode("header_label", 20f, 20f, tree, "Position:"))
                     //.addNode(LabelNode("position_label", 20f, 40f, tree, ""))
-                    .addNode(TextureRectNode("backgrounds", 0f, 0f, tree, 256, 256, Identifier("textures/gui/container/shulker_box.png")))
-                    .addPlayerInventory(8f,84f)
-                    .addNodeGrid(SlotNode("container", 8f, 18f, tree, InventoryType.CONTAINER, 0), 3, 9, 18f, 18f)
+                    .addNode(TextureRectNode("backgrounds", 0, 0, tree, 256, 256, Identifier("textures/gui/container/shulker_box.png")))
+                    .addPlayerInventory(8,84)
+                    .addNodeGrid(SlotNode("container", 8, 18, tree, InventoryType.CONTAINER, 0), 3, 9, 18, 18)
                     .build()
         }
 

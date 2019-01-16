@@ -12,10 +12,10 @@ import redstoneparadox.cardboardbox.gui.util.MouseUtil
  */
 interface InteractiveNode {
 
-    var x : Float
-    var y : Float
-    var width : Float
-    var height : Float
+    var x : Int
+    var y : Int
+    var width : Int
+    var height : Int
 
     /**
      * Override these and set them to false.
@@ -90,7 +90,7 @@ interface InteractiveNode {
         }
     }
 
-    private fun scaledCheck(start : Float, length : Float, pos : Float) : Boolean {
+    private fun scaledCheck(start : Int, length : Int, pos : Float) : Boolean {
         val scale: Double = MinecraftClient.getInstance().window.method_4495()
 
         return (pos >= (start * scale) && pos <= ((start + length) * scale))

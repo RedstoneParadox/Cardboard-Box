@@ -5,12 +5,11 @@ package redstoneparadox.cardboardbox.gui.nodes.interfaces
  */
 
 /**
- * Interface to allow children to get the position of the parent without having to distinguish between a GuiTree and a
- * GuiNode.
+ * Defines an element in a tree, which can be a GuiNode or GuiTree.
  */
 interface GuiTreeElement {
 
-    var x : Float
-    var y : Float
+    var x : Int
+    var y : Int
 
 }

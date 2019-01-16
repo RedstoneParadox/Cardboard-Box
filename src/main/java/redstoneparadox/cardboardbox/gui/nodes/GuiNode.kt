@@ -1,8 +1,8 @@
 package redstoneparadox.cardboardbox.gui.nodes
 
 import net.minecraft.client.font.FontRenderer
-import net.minecraft.client.gui.Gui
 import redstoneparadox.cardboardbox.gui.GuiTree
+import redstoneparadox.cardboardbox.gui.TreeGui
 import redstoneparadox.cardboardbox.gui.nodes.interfaces.GuiTreeElement
 
 /**
@@ -19,20 +19,20 @@ import redstoneparadox.cardboardbox.gui.nodes.interfaces.GuiTreeElement
  *
  * Unless otherwise noted in child classes, all constructor parameters here have the same uses.
  */
-open class GuiNode(var name: String, override var x: Float, override var y: Float, var root: GuiTree) : GuiTreeElement {
+open class GuiNode(var name: String, override var x: Int, override var y: Int, var root: GuiTree) : GuiTreeElement {
 
     var children : ArrayList<GuiNode> = ArrayList()
 
-    val originalX = x
-    val originalY = y
+    private val originalX = x
+    private val originalY = y
 
-    fun setup(gui: Gui, tree: GuiTree, treeElement: GuiTreeElement) {
+    fun setup(treeGui: TreeGui, tree: GuiTree, treeElement: GuiTreeElement) {
         root = tree
 
         x += treeElement.x
         y += treeElement.y
-        setupSelf(gui)
-        setupChildren(gui, tree, treeElement)
+        setupSelf(treeGui)
+        setupChildren(treeGui, tree, treeElement)
     }
 
     /**
@@ -40,18 +40,18 @@ open class GuiNode(var name: String, override var x: Float, override var y: Floa
      *
      * @param gui the Gui this node's tree is attached to.
      */
-    open fun setupSelf(gui: Gui) {
+    open fun setupSelf(treeGui: TreeGui) {
 
     }
 
-    private fun setupChildren(gui: Gui, tree: GuiTree, treeElement: GuiTreeElement) {
+    private fun setupChildren(treeGui: TreeGui, tree: GuiTree, treeElement: GuiTreeElement) {
 
         if (children.isEmpty()) {
             return
         }
 
         for (child in children) {
-            child.setup(gui, tree, treeElement)
+            child.setup(treeGui, tree, treeElement)
         }
     }
 
@@ -73,9 +73,9 @@ open class GuiNode(var name: String, override var x: Float, override var y: Floa
         }
     }
 
-    fun draw(gui: Gui, float: Float, int1: Int, int2: Int, fontRenderer: FontRenderer) {
-        drawSelf(gui, float, int1, int2)
-        drawChildren(gui, float, int1, int2, fontRenderer)
+    fun draw(treeGui: TreeGui, float: Float, int1: Int, int2: Int, fontRenderer: FontRenderer) {
+        drawSelf(treeGui, float, int1, int2)
+        drawChildren(treeGui, float, int1, int2, fontRenderer)
 
         x = originalX
         y = originalY
@@ -89,29 +89,18 @@ open class GuiNode(var name: String, override var x: Float, override var y: Floa
      * @param int1 Unknown Minecraft parameter.
      * @param int2 Unknown.
      */
-    open fun drawSelf(gui: Gui, float: Float, int1: Int, int2: Int) {
+    open fun drawSelf(treeGui: TreeGui, float: Float, int1: Int, int2: Int) {
 
     }
 
-    /**
-     * Function that creates a copy of this node and moves it to fit in a grid.
-     *
-     * @param xShift the number of pixels to shift this in the X direction.
-     * @param yShift the number of pixels to shift this in the Y direction.
-     * @param iteration the number of this node. Iteration 0 is the original copy of the node.
-     */
-    open fun createGridCopy(xShift: Float, yShift: Float, iteration: Int): GuiNode {
-        return GuiNode(name + "_" + iteration.toString(), x + xShift, y + yShift, root)
-    }
-
-    private fun drawChildren(gui: Gui, float: Float, int1: Int, int2: Int, fontRenderer: FontRenderer) {
+    private fun drawChildren(treeGui: TreeGui, float: Float, int1: Int, int2: Int, fontRenderer: FontRenderer) {
 
         if (children.isEmpty()) {
             return
         }
 
         for (child in children) {
-            child.draw(gui, float, int1, int2, fontRenderer)
+            child.draw(treeGui, float, int1, int2, fontRenderer)
         }
     }
 
@@ -142,5 +131,16 @@ open class GuiNode(var name: String, override var x: Float, override var y: Floa
         }
 
         children.add(guiNode)
+    }
+
+    /**
+     * Function that creates a copy of this node and moves it to fit in a grid.
+     *
+     * @param xShift the number of pixels to shift this in the X direction.
+     * @param yShift the number of pixels to shift this in the Y direction.
+     * @param iteration the number of this node. Iteration 0 is the original copy of the node.
+     */
+    open fun createGridCopy(xShift: Int, yShift: Int, iteration: Int): GuiNode {
+        return GuiNode(name + "_" + iteration.toString(), x + xShift, y + yShift, root)
     }
 }

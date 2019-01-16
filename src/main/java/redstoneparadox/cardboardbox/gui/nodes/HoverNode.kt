@@ -11,7 +11,7 @@ import redstoneparadox.cardboardbox.gui.util.MouseUtil
 /**
  * Basic node that detects when it is being hovered over with the cursor.
  */
-class HoverNode(name: String, x: Float, y: Float, root : GuiTree, override var width : Float, override var height : Float) : GuiNode(name, x, y, root), InteractiveNode {
+class HoverNode(name: String, x: Int, y: Int, root : GuiTree, override var width : Int, override var height : Int) : GuiNode(name, x, y, root), InteractiveNode {
 
     override var isMouseInside: Boolean = false
     override var isMousePressed: Boolean = false

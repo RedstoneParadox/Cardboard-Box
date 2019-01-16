@@ -10,7 +10,7 @@ import redstoneparadox.cardboardbox.gui.nodes.interfaces.InteractiveNode
 /**
  * A class for creating simple buttons.
  */
-class ButtonNode(name: String, x: Float, y: Float, root: GuiTree, override var width: Float, override var height: Float, var toggleable : Boolean) : GuiNode(name, x, y, root), InteractiveNode {
+class ButtonNode(name: String, x: Int, y: Int, root: GuiTree, override var width: Int, override var height: Int, var toggleable : Boolean) : GuiNode(name, x, y, root), InteractiveNode {
 
     override var isMouseInside: Boolean = false
     override var isMousePressed: Boolean = false

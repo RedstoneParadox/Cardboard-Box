@@ -3,8 +3,7 @@
   "package": "redstoneparadox.cardboardbox.client.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "GuiMixin",
-    "ContainerGuiMixin"
+    "GuiMixin"
   ],
   "injectors": {
     "defaultRequire": 1

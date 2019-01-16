@@ -1,6 +1,5 @@
 package redstoneparadox.cardboardbox.gui
 
-import net.minecraft.client.gui.Gui
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.util.Identifier
 import redstoneparadox.cardboardbox.container.InventoryType
@@ -19,9 +18,9 @@ import redstoneparadox.cardboardbox.gui.util.GuiTreeManager
  * @param identifier The identifier for the built tree.
  * @param playerEntity the player that opens the GUI.
  */
-class GuiTreeBuilder(val identifier: Identifier, val playerEntity: PlayerEntity, val gui: Gui, val x: Float, val y: Float) {
+class GuiTreeBuilder(val identifier: Identifier, val playerEntity: PlayerEntity, val treeGui: TreeGui, val x: Int, val y: Int) {
 
-    val tree : GuiTree = GuiTree(identifier, playerEntity, gui, x, y)
+    val tree : GuiTree = GuiTree(identifier, playerEntity, treeGui, x, y)
 
     /**
      * Adds a node to the root of the tree.
@@ -52,7 +51,7 @@ class GuiTreeBuilder(val identifier: Identifier, val playerEntity: PlayerEntity,
      * @param rowSize the height of each row.
      * @param columnSize the width of each column.
      */
-    fun addNodeGrid(node: GuiNode, rows : Int, columns : Int, rowSize : Float, columnSize : Float) : GuiTreeBuilder {
+    fun addNodeGrid(node: GuiNode, rows : Int, columns : Int, rowSize : Int, columnSize : Int) : GuiTreeBuilder {
         var iteration : Int = 0
 
         for (j in 0 until rows) {
@@ -105,9 +104,9 @@ class GuiTreeBuilder(val identifier: Identifier, val playerEntity: PlayerEntity,
      * Setting the coordinates to (0, 83) should put the player inventory in the same position that it appears in for
      * vanilla containers but the exact value may depend on the size of the container.
      */
-    fun addPlayerInventory(xPos : Float, yPos : Float): GuiTreeBuilder {
-        addNodeGrid(SlotNode("player_slot", xPos, yPos, tree, InventoryType.PLAYER, 0), 3, 9, 18f, 18f)
-        addNodeGrid(SlotNode("hotbar_slot", xPos, yPos + 58f, tree, InventoryType.HOTBAR, 0), 1, 9, 18f, 18f)
+    fun addPlayerInventory(xPos : Int, yPos : Int): GuiTreeBuilder {
+        addNodeGrid(SlotNode("player_slot", xPos, yPos, tree, InventoryType.PLAYER, 0), 3, 9, 18, 18)
+        addNodeGrid(SlotNode("hotbar_slot", xPos, yPos + 58, tree, InventoryType.HOTBAR, 0), 1, 9, 18, 18)
 
         return this
     }
