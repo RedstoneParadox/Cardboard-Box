@@ -91,7 +91,7 @@ interface InteractiveNode {
     }
 
     private fun scaledCheck(start : Int, length : Int, pos : Float) : Boolean {
-        val scale: Double = MinecraftClient.getInstance().window.method_4495()
+        val scale: Double = MinecraftClient.getInstance().window.scaleFactor
 
         return (pos >= (start * scale) && pos <= ((start + length) * scale))
     }

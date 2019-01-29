@@ -87,7 +87,7 @@ class ContainerTreeGUI(cardboardContainer: CardboardContainer, override val id :
 
         GlStateManager.enableBlend()
         GlStateManager.disableTexture()
-        GlStateManager.blendFuncSeparate(GlStateManager.SrcBlendFactor.SRC_ALPHA, GlStateManager.DstBlendFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SrcBlendFactor.ONE, GlStateManager.DstBlendFactor.ZERO)
+        GlStateManager.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO)
         GlStateManager.color4f(redPercent, greenPercent, bluePercent, alphaPercent)
 
         bufferBuilder.begin(7, VertexFormats.POSITION)
@@ -123,14 +123,6 @@ class ContainerTreeGUI(cardboardContainer: CardboardContainer, override val id :
 
     override fun getTop() : Int {
         return top
-    }
-
-    override fun getWidth(): Int {
-        return containerWidth
-    }
-
-    override fun getHeight(): Int {
-        return containerHeight
     }
 
     override fun drawTexture(xPos: Int, yPos: Int, width: Int, height: Int) {

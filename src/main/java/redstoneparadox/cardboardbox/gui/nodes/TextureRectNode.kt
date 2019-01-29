@@ -2,6 +2,7 @@ package redstoneparadox.cardboardbox.gui.nodes
 
 import com.mojang.blaze3d.platform.GlStateManager
 import net.minecraft.client.MinecraftClient
+import net.minecraft.client.gui.Gui
 import net.minecraft.util.Identifier
 import redstoneparadox.cardboardbox.gui.GuiTree
 import redstoneparadox.cardboardbox.gui.TreeGui
@@ -20,8 +21,8 @@ class TextureRectNode(name: String, x: Int, y: Int, root: GuiTree, var width : I
     override fun drawSelf(treeGui: TreeGui, float: Float, int1: Int, int2: Int) {
         GlStateManager.color4f(1.0f,1.0f, 1.0f, 1.0f)
         MinecraftClient.getInstance().textureManager.bindTexture(id)
-        //val int3 : Int = (gui.width - (gui as IContainerGui).width) / 2
-        //val int4 : Int = (gui.height - (gui as IContainerGui).height) / 2
-        treeGui.drawTexture(x, y, treeGui.getWidth(), treeGui.getHeight())
+        val int3 : Int = ((treeGui as Gui).width - 176) / 2
+        val int4 : Int = ((treeGui as Gui).height - 166) / 2
+        treeGui.drawTexture(x, y, (treeGui as Gui).width, (treeGui as Gui).height)
     }
 }

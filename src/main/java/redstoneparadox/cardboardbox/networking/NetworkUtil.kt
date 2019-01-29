@@ -18,7 +18,7 @@ object NetworkUtil {
     private val listeners : ArrayList<CardboardContainer> = ArrayList()
 
     fun init() {
-        CustomPayloadPacketRegistry.SERVER.register(CardboardBox.CHANGE_SLOT) { packetContext, packetByteBuff ->
+        CustomPayloadPacketRegistry.SERVER.register(CardboardBox.SYNC_SLOT) { packetContext, packetByteBuff ->
             val data = packetByteBuff.readIntArray()
 
             val xPos = data[0]
@@ -34,7 +34,7 @@ object NetworkUtil {
     fun syncSlot(posX : Int, posY : Int, index : Int, syncId : Int, player : ClientPlayerEntity) {
         val buf = PacketByteBuf(Unpooled.buffer())
         buf.writeIntArray(intArrayOf(posX, posY, index, syncId))
-        player.networkHandler.sendPacket(CustomPayloadServerPacket(CardboardBox.CHANGE_SLOT, buf))
+        player.networkHandler.sendPacket(CustomPayloadServerPacket(CardboardBox.SYNC_SLOT, buf))
     }
 
     fun listenForUpdate(cardboardContainer: CardboardContainer) {

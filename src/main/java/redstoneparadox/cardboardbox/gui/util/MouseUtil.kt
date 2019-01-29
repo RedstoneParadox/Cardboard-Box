@@ -19,15 +19,8 @@ object MouseUtil {
 
     var pressed : Boolean = false
 
-    var printSlots : Boolean = true
-
     fun init() {
         ClientTickEvent.CLIENT.register( Consumer { client ->
-
-            if (client.player != null && MouseUtil.printSlots) {
-                println(client.player.containerPlayer.slotList)
-                MouseUtil.printSlots = false
-            }
             update(client.mouse)
         } )
     }

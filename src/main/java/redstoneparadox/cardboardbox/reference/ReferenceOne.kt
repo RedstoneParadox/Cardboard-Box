@@ -14,12 +14,13 @@ import net.minecraft.container.Container
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.inventory.Inventory
 import net.minecraft.item.ItemStack
+import net.minecraft.nbt.CompoundTag
 import net.minecraft.util.DefaultedList
 import net.minecraft.util.Hand
 import net.minecraft.util.Identifier
 import net.minecraft.util.InventoryUtil
+import net.minecraft.util.hit.BlockHitResult
 import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Direction
 import net.minecraft.util.registry.Registry
 import net.minecraft.util.registry.Registry.register
 import net.minecraft.world.BlockView
@@ -55,7 +56,7 @@ class ReferenceOneMain : ModInitializer {
     }
 
     override fun onInitialize() {
-        EXAMPLE_ONE_BLOCK = register<Block>(Registry.BLOCK, EXAMPLE_ONE_ID, ReferenceOneBlock())
+        EXAMPLE_ONE_BLOCK = register(Registry.BLOCK, EXAMPLE_ONE_ID, ReferenceOneBlock())
         EXAMPLE_ONE_BE = registerBlockEntity(EXAMPLE_ONE_ID, BlockEntityType.Builder.create { ExampleOneBlockEntity() })
 
         /**
@@ -91,10 +92,10 @@ class ReferenceOneClient : ClientModInitializer {
             val tree : GuiTree = builder.tree
 
             builder
-                    //.addNode(ColoredRectNode("color", 10f, 10f, tree,100f, 60f, RGBAColor.Presets.WHITE.pick()))
-                    //.addNode(HoverNode("area", 10f, 10f, tree, 100f, 60f))
-                    //.addNode(LabelNode("header_label", 20f, 20f, tree, "Position:"))
-                    //.addNode(LabelNode("position_label", 20f, 40f, tree, ""))
+                    //.addNode(ColoredRectNode("color", 10, 10, tree,100, 60, RGBAColor.Presets.WHITE.pick()))
+                    //.addNode(HoverNode("area", 10, 10, tree, 100, 60))
+                    //.addNode(LabelNode("header_label", 20, 20, tree, "Position:"))
+                    //.addNode(LabelNode("position_label", 20, 40, tree, ""))
                     .addNode(TextureRectNode("backgrounds", 0, 0, tree, 256, 256, Identifier("textures/gui/container/shulker_box.png")))
                     .addPlayerInventory(8,84)
                     .addNodeGrid(SlotNode("container", 8, 18, tree, InventoryType.CONTAINER, 0), 3, 9, 18, 18)
@@ -206,6 +207,17 @@ class ExampleOneBlockEntity : BlockEntity(ReferenceOneMain.EXAMPLE_ONE_BE), GuiT
         inventory.clear()
     }
 
+    override fun fromTag(compoundTag: CompoundTag) {
+        super.fromTag(compoundTag)
+        InventoryUtil.deserialize(compoundTag, inventory)
+    }
+
+    override fun toTag(compoundTag: CompoundTag): CompoundTag {
+        super.toTag(compoundTag)
+        InventoryUtil.serialize(compoundTag, inventory)
+        return compoundTag
+    }
+
 }
 
 /**
@@ -217,13 +229,13 @@ class ReferenceOneBlock : BlockWithEntity(Settings.of(Material.STONE)) {
         return ExampleOneBlockEntity()
     }
 
-    override fun activate(blockState_1: BlockState, world_1: World, blockPos_1: BlockPos, playerEntity_1: PlayerEntity, hand_1: Hand, direction_1: Direction, float_1: Float, float_2: Float, float_3: Float): Boolean {
-        if (!world_1.isClient() && hasBlockEntity()) {
+    override fun activate(state: BlockState, world: World, pos: BlockPos, player: PlayerEntity, hand: Hand, hitResult: BlockHitResult): Boolean {
+        if (!world.isClient() && hasBlockEntity()) {
 
 
-            ContainerProviderRegistry.INSTANCE.openContainer(ReferenceOneMain.EXAMPLE_ONE_ID, playerEntity_1) { it.writeBlockPos(blockPos_1)}
+            ContainerProviderRegistry.INSTANCE.openContainer(ReferenceOneMain.EXAMPLE_ONE_ID, player) { it.writeBlockPos(pos)}
         }
 
-        return super.activate(blockState_1, world_1, blockPos_1, playerEntity_1, hand_1, direction_1, float_1, float_2, float_3)
+        return super.activate(state, world, pos, player, hand, hitResult)
     }
 }

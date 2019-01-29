@@ -48,9 +48,7 @@ class SlotNode(name: String, x: Int, y: Int, root : GuiTree, val type: Inventory
         slot.xPosition = actualX
         slot.yPosition = actualY
 
-        if (treeGui.player is ClientPlayerEntity) {
-            NetworkUtil.syncSlot(actualX, actualY, index, container.syncId, (treeGui.player) as ClientPlayerEntity)
-        }
+        NetworkUtil.syncSlot(actualX, actualY, index, container.syncId, (treeGui.player) as ClientPlayerEntity)
     }
 
     override fun createGridCopy(xShift: Int, yShift: Int, iteration: Int) : GuiNode {
