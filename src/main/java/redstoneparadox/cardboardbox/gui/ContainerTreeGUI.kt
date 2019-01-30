@@ -37,6 +37,12 @@ class ContainerTreeGUI(cardboardContainer: CardboardContainer, override val id :
 
     override fun drawBackground(p0: Float, p1: Int, p2: Int) {
 
+        left = 0
+        top = 0
+
+        width = getWidth()
+        height = getHeight()
+
         this.float = p0
         this.int1 = p1
         this.int2 = p2
@@ -126,5 +132,9 @@ class ContainerTreeGUI(cardboardContainer: CardboardContainer, override val id :
 
     override fun drawTexture(xPos: Int, yPos: Int, width: Int, height: Int) {
         drawTexturedRect(xPos, yPos, 0, 0, width, height)
+    }
+
+    override fun isClickOutsideBounds(double_1: Double, double_2: Double, int_1: Int, int_2: Int, int_3: Int): Boolean {
+        return false
     }
 }

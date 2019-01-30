@@ -43,11 +43,10 @@ object NetworkUtil {
     }
 
     @Environment(EnvType.CLIENT)
-    @Deprecated("")
+    @Deprecated("Figure out a way to send all the data in a single packet.")
     fun syncSlot(posX : Int, posY : Int, index : Int, syncId : Int, player : ClientPlayerEntity) {
         val buf = PacketByteBuf(Unpooled.buffer())
         buf.writeIntArray(intArrayOf(posX, posY, index, syncId))
-        println("Sent: xPos = $posX, yPos = $posY, Index = $index, syncID = $syncId")
         player.networkHandler.sendPacket(CustomPayloadServerPacket(CardboardBox.SYNC_SLOT, buf))
     }
 
@@ -59,7 +58,6 @@ object NetworkUtil {
     }
 
     fun listenForUpdate(cardboardContainer: CardboardContainer) {
-        println("Adding listener: syncId = ${cardboardContainer.syncId}")
         listeners.add(cardboardContainer)
     }
 
@@ -77,13 +75,8 @@ object NetworkUtil {
         }
     }
 
-    @Deprecated("")
+    @Deprecated("Figure out a way to send all the data in a single packet.")
     private fun updateSlot(posX : Int, posY : Int, index : Int, syncId : Int) {
-        println("Recieved: xPos = $posX, yPos = $posY, Index = $index, syncID = $syncId")
-
-        if (listeners.isEmpty()) {
-            println("But there were no listeners!")
-        }
 
         for (listener in listeners) {
             if (listener.syncId == syncId) {

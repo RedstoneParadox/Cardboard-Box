@@ -46,8 +46,8 @@ class SlotNode(name: String, x: Int, y: Int, root : GuiTree, val type: Inventory
         val xShift : Int = treeGui.getLeft() - root.x
         val yShift : Int = treeGui.getTop() - root.y
 
-        slot.xPosition = x - xShift
-        slot.yPosition = y - yShift
+        slot.xPosition = x
+        slot.yPosition = y
 
         NetworkUtil.syncSlot(slot.xPosition, slot.yPosition, index, container.syncId, (treeGui.player) as ClientPlayerEntity)
     }

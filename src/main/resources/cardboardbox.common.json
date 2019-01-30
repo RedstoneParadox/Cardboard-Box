@@ -3,7 +3,6 @@
   "package": "redstoneparadox.cardboardbox.hooks.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "SlotMixin"
   ],
   "injectors": {
     "defaultRequire": 1
