@@ -25,8 +25,7 @@ class ContainerTreeGUI(cardboardContainer: CardboardContainer, override val id :
     override val guiTree : GuiTree = GuiTreeSupplierRegistry.supplyTree(id, player, this)!!
 
     init {
-        left = guiTree.x
-        top = guiTree.y
+
     }
 
     /**

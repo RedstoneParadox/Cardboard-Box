@@ -29,6 +29,8 @@ open class GuiNode(var name: String, override var x: Int, override var y: Int, v
     fun setup(treeGui: TreeGui, tree: GuiTree, treeElement: GuiTreeElement) {
         root = tree
 
+
+
         x += treeElement.x
         y += treeElement.y
         setupSelf(treeGui)

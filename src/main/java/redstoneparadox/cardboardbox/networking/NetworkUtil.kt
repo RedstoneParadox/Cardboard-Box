@@ -28,28 +28,70 @@ object NetworkUtil {
 
             updateSlot(xPos, yPos, index, syncId)
         }
+
+        /*
+        CustomPayloadPacketRegistry.SERVER.register(CardboardBox.SYNC_SLOT) {context: PacketContext, buf: PacketByteBuf ->
+            val data = buf.readIntArray()
+
+            val offsetX = data[0]
+            val offsetY = data[1]
+            val syncId = data[2]
+
+
+        }
+        */
     }
 
     @Environment(EnvType.CLIENT)
+    @Deprecated("")
     fun syncSlot(posX : Int, posY : Int, index : Int, syncId : Int, player : ClientPlayerEntity) {
         val buf = PacketByteBuf(Unpooled.buffer())
         buf.writeIntArray(intArrayOf(posX, posY, index, syncId))
+        println("Sent: xPos = $posX, yPos = $posY, Index = $index, syncID = $syncId")
+        player.networkHandler.sendPacket(CustomPayloadServerPacket(CardboardBox.SYNC_SLOT, buf))
+    }
+
+    @Environment(EnvType.CLIENT)
+    fun syncSlots(offsetX : Int, offsetY : Int, syncId: Int, player : ClientPlayerEntity) {
+        val buf = PacketByteBuf(Unpooled.buffer())
+        buf.writeIntArray(intArrayOf(offsetX, offsetY, syncId))
         player.networkHandler.sendPacket(CustomPayloadServerPacket(CardboardBox.SYNC_SLOT, buf))
     }
 
     fun listenForUpdate(cardboardContainer: CardboardContainer) {
+        println("Adding listener: syncId = ${cardboardContainer.syncId}")
         listeners.add(cardboardContainer)
     }
 
+    private fun updateSlots(offsetX : Int, offsetY : Int, syncId: Int) {
+
+        for (listener in listeners) {
+
+            if (listener.syncId == syncId) {
+
+                if (listener.hasSlots()) {
+
+                    break
+                }
+            }
+        }
+    }
+
+    @Deprecated("")
     private fun updateSlot(posX : Int, posY : Int, index : Int, syncId : Int) {
+        println("Recieved: xPos = $posX, yPos = $posY, Index = $index, syncID = $syncId")
+
+        if (listeners.isEmpty()) {
+            println("But there were no listeners!")
+        }
 
         for (listener in listeners) {
             if (listener.syncId == syncId) {
 
                 if (listener.hasSlots()) {
-
                     listener.syncSlotPosition(posX, posY, index)
                 }
+                break
             }
         }
     }

@@ -27,13 +27,10 @@ import net.minecraft.world.BlockView
 import net.minecraft.world.World
 import redstoneparadox.cardboardbox.CardboardBox
 import redstoneparadox.cardboardbox.container.CardboardContainer
-import redstoneparadox.cardboardbox.container.InventoryType
 import redstoneparadox.cardboardbox.gui.ContainerTreeGUI
 import redstoneparadox.cardboardbox.gui.GuiTree
 import redstoneparadox.cardboardbox.gui.GuiTreeBuilder
 import redstoneparadox.cardboardbox.gui.nodes.LabelNode
-import redstoneparadox.cardboardbox.gui.nodes.SlotNode
-import redstoneparadox.cardboardbox.gui.nodes.TextureRectNode
 import redstoneparadox.cardboardbox.gui.util.GuiTreeManager
 import redstoneparadox.cardboardbox.misc.GuiTreeController
 import redstoneparadox.cardboardbox.reference.ReferenceOneMain.Companion.EXAMPLE_ONE_ID
@@ -96,9 +93,9 @@ class ReferenceOneClient : ClientModInitializer {
                     //.addNode(HoverNode("area", 10, 10, tree, 100, 60))
                     //.addNode(LabelNode("header_label", 20, 20, tree, "Position:"))
                     //.addNode(LabelNode("position_label", 20, 40, tree, ""))
-                    .addNode(TextureRectNode("backgrounds", 0, 0, tree, 256, 256, Identifier("textures/gui/container/shulker_box.png")))
-                    .addPlayerInventory(8,84)
-                    .addNodeGrid(SlotNode("container", 8, 18, tree, InventoryType.CONTAINER, 0), 3, 9, 18, 18)
+                    //.addNode(TextureRectNode("backgrounds", 0, 0, tree, 256, 256, Identifier("textures/gui/container/shulker_box.png")))
+                    //.addPlayerInventory(8,84)
+                    //.addNodeGrid(SlotNode("container", 8, 18, tree, InventoryType.CONTAINER, 0), 3, 9, 18, 18)
                     .build()
         }
 
@@ -231,8 +228,6 @@ class ReferenceOneBlock : BlockWithEntity(Settings.of(Material.STONE)) {
 
     override fun activate(state: BlockState, world: World, pos: BlockPos, player: PlayerEntity, hand: Hand, hitResult: BlockHitResult): Boolean {
         if (!world.isClient() && hasBlockEntity()) {
-
-
             ContainerProviderRegistry.INSTANCE.openContainer(ReferenceOneMain.EXAMPLE_ONE_ID, player) { it.writeBlockPos(pos)}
         }
 
